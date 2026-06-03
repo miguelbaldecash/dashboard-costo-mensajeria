@@ -1775,6 +1775,7 @@
   <!-- ================================================================== -->
   <!-- SECCION 10: FICHA POR PLANTILLA                                    -->
   <!-- ================================================================== -->
+  <!-- ================================================================== -->
   <div class="section" id="sec-ficha-plantilla">
     <div class="section-num">9</div>
     <h2 class="section-head">Ficha por plantilla</h2>
@@ -1890,6 +1891,84 @@
     <div class="footnote" style="margin-top:12px;">
       Dias negativos (-4 a -1) = preventivos enviados antes de la fecha de vencimiento. Dia 0 = dia de vencimiento. Dias 1-30 = morosos. "gestor" = plantillas de gestores de cobranza (Botmaker/Blip). "moderada" = Voximplant WA HSM. "autoreprog" = autoreprogramacion. Costo calculado con tarifa blended del mes.<br><br>
       <strong>Nota:</strong> Ene y feb no incluyen ~212 y ~4,803 mensajes de gestores Botmaker (planilla_cobranza_anderson y otros) que no tienen tramo de mora en el nombre de la plantilla. Estos mensajes si estan contabilizados en la Seccion 2 como parte del total de cobranza. Mar y abr cuadran al 100% con la Seccion 2.
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 11: TASAS DE ENTREGA                                       -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-delivery">
+    <div class="section-num">11</div>
+    <h2 class="section-head">Tasas de entrega, lectura y respuesta</h2>
+    <div class="section-desc">Metricas de delivery por plataforma &middot; Enero&ndash;Mayo 2026</div>
+
+    <!-- Tabla 1: Resumen por plataforma -->
+    <div class="subsection">
+      <div class="subsection-title">Resumen por plataforma y periodo</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Plataforma</th><th>Periodo</th><th class="r">Enviados</th><th class="r">Entregados</th><th class="r">% entrega</th><th class="r">Leidos / Open</th><th class="r">% leido</th><th class="r">Respondidos</th><th class="r">% resp.</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group-header"><td colspan="9">Botmaker (fuente: dashboard)</td></tr>
+          <tr><td></td><td>Ene</td><td class="r">28,302</td><td class="r">14,933</td><td class="r">52.76%</td><td class="r">11,013</td><td class="r">38.92%</td><td class="r">846</td><td class="r">2.99%</td></tr>
+          <tr><td></td><td>Feb</td><td class="r">19,696</td><td class="r">11,398</td><td class="r">57.88%</td><td class="r">7,965</td><td class="r">40.44%</td><td class="r">449</td><td class="r">2.28%</td></tr>
+
+          <tr class="group-header"><td colspan="9">GoHighLevel (fuente: dashboard, emails cobranza)</td></tr>
+          <tr><td></td><td>Abr</td><td class="r">4,526</td><td class="r">4,279</td><td class="r">94.54%</td><td class="r">1,026</td><td class="r">23.98%</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+          <tr><td></td><td>May</td><td class="r">11,768</td><td class="r">11,467</td><td class="r">97.44%</td><td class="r">2,523</td><td class="r">22.00%</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+
+          <tr class="group-header"><td colspan="9">Mailgun (fuente: dashboard, emails transaccionales)</td></tr>
+          <tr><td></td><td>Ene</td><td class="r">16,800</td><td class="r">15,800</td><td class="r">93.95%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+          <tr><td></td><td>Feb</td><td class="r">21,300</td><td class="r">20,000</td><td class="r">94.10%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+          <tr><td></td><td>Mar</td><td class="r">27,902</td><td class="r">26,906</td><td class="r">96.43%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+
+          <tr class="group-header"><td colspan="9">Voximplant WA (fuente: dashboard Kit + DB)</td></tr>
+          <tr><td></td><td>Feb</td><td class="r">1,659</td><td class="r">1,645 <span style="color:#999;font-size:10px;">(aceptados)</span></td><td class="r">99.2%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">1,096 chats</td><td class="r">66.1%</td></tr>
+          <tr><td></td><td>Mar</td><td class="r">46,115</td><td class="r">44,055 <span style="color:#999;font-size:10px;">(aceptados)</span></td><td class="r">95.5%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">7,561 chats</td><td class="r">16.4%</td></tr>
+          <tr><td></td><td>Abr</td><td class="r">37,350</td><td class="r">36,185 <span style="color:#999;font-size:10px;">(aceptados)</span></td><td class="r">96.9%</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">7,121 chats</td><td class="r">19.1%</td></tr>
+          <tr><td colspan="9" style="font-size:11px;color:#666;padding:4px 12px;">Chats perdidos: feb 95 (8.7%) · mar 883 (11.7%) · abr 653 (9.2%). Tiempo promedio resolucion: feb 4d 6h · mar 4d 19h · abr 3d 21h</td></tr>
+
+          <tr class="group-header"><td colspan="9">Blip (fuente: templates DB + dashboard contactos)</td></tr>
+          <tr><td></td><td>Mar</td><td class="r">129,688</td><td class="r">53,785</td><td class="r">41.47%</td><td class="r" style="color:#999;">n/d</td><td class="r" style="color:#999;">n/d</td><td class="r">9,530 <span style="color:#999;font-size:10px;">de 43,798</span></td><td class="r">21.76%</td></tr>
+          <tr><td></td><td>Abr</td><td class="r">148,828</td><td class="r">67,403</td><td class="r">45.29%</td><td class="r" style="color:#999;">n/d</td><td class="r" style="color:#999;">n/d</td><td class="r">13,221 <span style="color:#999;font-size:10px;">de 54,476</span></td><td class="r">24.27%</td></tr>
+          <tr><td></td><td>May 1&ndash;26</td><td class="r">140,905</td><td class="r">48,801</td><td class="r">34.63%</td><td class="r" style="color:#999;">n/d</td><td class="r" style="color:#999;">n/d</td><td class="r">8,379 <span style="color:#999;font-size:10px;">de 55,129</span></td><td class="r">15.20%</td></tr>
+        </tbody>
+      </table>
+      <div class="footnote" style="margin-top:8px;">
+        <strong>Blip:</strong> "Enviados" = templates HSM de la DB (blip_whatsapp_logs). "Entregados" = mensajes recibidos de vuelta en el dashboard (respuestas de usuarios a templates, bot y agentes). "Respondidos" = contactos que interactuaron (enviaron al menos 1 mensaje), de un total de contactos unicos del mes. Por politica de Meta, el negocio solo puede iniciar conversacion via template, por lo que las respuestas son mayormente a templates enviados. Enero y febrero no disponibles: la API de Blip no retiene datos de dashboard con esa antiguedad.<br>
+        <strong>Voximplant WA:</strong> No expone metricas de lectura. Solo se registra si WhatsApp acepto el mensaje (success=1) o lo rechazo (success=0).
+      </div>
+    </div>
+
+    <!-- Tabla 2: Success/Failed por plataforma WA -->
+    <div class="subsection">
+      <div class="subsection-title">Aceptados vs fallidos — WhatsApp (DB)</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Plataforma</th><th>Periodo</th><th class="r">Total</th><th class="r">Aceptados</th><th class="r">% aceptado</th><th class="r">Fallidos</th><th class="r">% fallido</th><th>Error principal</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group-header"><td colspan="8">Blip (blip_whatsapp_logs, message_type=template)</td></tr>
+          <tr><td></td><td>2026-01</td><td class="r">127,587</td><td class="r">127,585</td><td class="r">100.00%</td><td class="r">2</td><td class="r">0.00%</td><td style="color:#999;font-size:11px;">&mdash;</td></tr>
+          <tr><td></td><td>2026-02</td><td class="r">88,325</td><td class="r">88,324</td><td class="r">100.00%</td><td class="r">1</td><td class="r">0.00%</td><td style="color:#999;font-size:11px;">&mdash;</td></tr>
+          <tr><td></td><td>2026-03</td><td class="r">129,688</td><td class="r">129,688</td><td class="r">100.00%</td><td class="r">0</td><td class="r">0.00%</td><td style="color:#999;font-size:11px;">&mdash;</td></tr>
+          <tr><td></td><td>2026-04</td><td class="r">148,828</td><td class="r">148,828</td><td class="r">100.00%</td><td class="r">0</td><td class="r">0.00%</td><td style="color:#999;font-size:11px;">&mdash;</td></tr>
+          <tr><td></td><td>2026-05</td><td class="r">140,905</td><td class="r">140,905</td><td class="r">100.00%</td><td class="r">0</td><td class="r">0.00%</td><td style="color:#999;font-size:11px;">&mdash;</td></tr>
+
+          <tr class="group-header"><td colspan="8">Voximplant (voximplant_whatsapp_logs)</td></tr>
+          <tr><td></td><td>2026-02</td><td class="r">1,659</td><td class="r">1,645</td><td class="r">99.16%</td><td class="r">14</td><td class="r" style="color:#c62828;">0.84%</td><td style="font-size:11px;">Template not sent to active conv (14)</td></tr>
+          <tr><td></td><td>2026-03</td><td class="r">46,115</td><td class="r">44,055</td><td class="r">95.53%</td><td class="r" style="color:#c62828;">2,060</td><td class="r" style="color:#c62828;">4.47%</td><td style="font-size:11px;">Active conv (1,686) + Unknown (372) + Server (2)</td></tr>
+          <tr><td></td><td>2026-04</td><td class="r">37,350</td><td class="r">36,185</td><td class="r">96.88%</td><td class="r" style="color:#c62828;">1,165</td><td class="r" style="color:#c62828;">3.12%</td><td style="font-size:11px;">Active conv (1,018) + Unknown (147)</td></tr>
+          <tr><td></td><td>2026-05</td><td class="r">20,584</td><td class="r">19,970</td><td class="r">97.02%</td><td class="r">614</td><td class="r" style="color:#c62828;">2.98%</td><td style="font-size:11px;">Active conv (495) + Unknown (119)</td></tr>
+        </tbody>
+      </table>
+      <div class="footnote" style="margin-top:8px;">
+        <strong>Aceptado</strong> = WhatsApp recibio el mensaje para envio (HTTP 202). No confirma entrega al telefono del destinatario.<br>
+        <strong>Fallido</strong> = WhatsApp rechazo el mensaje. Error principal de Voximplant: "Message template could not be sent to active conversation" — se intento enviar un template cuando ya habia una conversacion abierta con ese usuario.<br>
+        <strong>Blip</strong> tiene tasa de aceptacion del 100% porque el backend valida antes de enviar. Los 3 fallos (ene/feb) son casos excepcionales.
+      </div>
     </div>
   </div>
 
