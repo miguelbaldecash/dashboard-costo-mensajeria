@@ -302,7 +302,8 @@
       <tbody>
         <tr><td><strong>Blip</strong></td><td>Templates WA (DB)</td><td class="r">127,587</td><td class="r">88,325</td><td class="r">129,688</td><td class="r">148,828</td><td class="r">140,905</td></tr>
         <tr><td><strong>Botmaker</strong></td><td>Sesiones WA (dashboard)</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
-        <tr><td><strong>Voximplant</strong></td><td>Llamadas campanas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+        <tr><td><strong>Voximplant</strong></td><td>Llamadas PSTN (API)</td><td class="r">45</td><td class="r">115,501</td><td class="r">66,088</td><td class="r">80,289</td><td class="r">109,689</td></tr>
+        <tr><td></td><td style="color:#999;font-size:11px;padding-left:24px;">de las cuales: campanas dialer</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">63,798</td><td class="r" style="color:#999;font-size:11px;">84,252</td><td class="r" style="color:#999;font-size:11px;">34,800</td></tr>
         <tr><td><strong>Voximplant</strong></td><td>WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
         <tr><td><strong>Kontactus</strong></td><td>Llamadas</td><td class="r">~6,200 *</td><td class="r">~26,900 *</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
         <tr><td><strong>GoHighLevel</strong></td><td>Emails cobranza</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
@@ -310,7 +311,8 @@
         <tr><td><strong>Labs Mobile</strong></td><td>SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
       </tbody>
     </table>
-    <div class="footnote" style="margin-top:8px;">Botmaker muestra sesiones del dashboard (28,302 ene) que difiere de los logs DB (28,090 ene) usados en la Seccion 9 (Ficha por plantilla, 155,677 msgs). La diferencia (~212 ene, ~4,803 feb) son sesiones sin template HSM registrado. Los costos se calculan con los datos de factura, no con estos volumenes.</div>
+    <div class="footnote" style="margin-top:8px;">Botmaker muestra sesiones del dashboard (28,302 ene) que difiere de los logs DB (28,090 ene) usados en la Seccion 9 (Ficha por plantilla, 155,677 msgs). La diferencia (~212 ene, ~4,803 feb) son sesiones sin template HSM registrado. Los costos se calculan con los datos de factura, no con estos volumenes.<br>
+      <strong>Voximplant llamadas (mar&ndash;may):</strong> Datos de la API searchCalls (todas las llamadas PSTN salientes). Las "campanas dialer" son un subconjunto (agentCampaigns): mar 63,798 / abr 84,252 / may 34,800. La diferencia son llamadas de escenarios, colas y manuales. Ene/Feb no extraidos via API.</div>
   </div>
 
   <div class="subsection">
@@ -322,14 +324,14 @@
       <tbody>
         <tr><td><strong>Blip</strong></td><td>USD</td><td class="r">$6,011.58</td><td class="r">$5,999.75</td><td class="r">$8,788.95</td><td class="r">$11,146.44</td><td class="r">&mdash;</td><td class="r"><strong>$31,946.72</strong></td></tr>
         <tr><td><strong>Botmaker</strong></td><td>USD</td><td class="r">$3,656.33</td><td class="r">$3,625.72</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r"><strong>$7,282.05</strong></td></tr>
-        <tr><td><strong>Voximplant</strong></td><td>USD</td><td class="r">$1,000 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$500 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$756.31</td><td class="r">$2,111.84</td><td class="r">$1,500 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r"><strong>$5,868.15</strong></td></tr>
+        <tr><td><strong>Voximplant</strong></td><td>USD</td><td class="r">$1,000 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$500 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$756.31</td><td class="r">$2,111.84</td><td class="r">$1,500 <span style="color:#999;font-size:10px;">rec.</span> <span style="color:#999;font-size:10px;">(consumo ~$566 PSTN)</span></td><td class="r"><strong>$5,868.15</strong></td></tr>
         <tr><td><strong>GoHighLevel</strong></td><td>USD</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$100.07</td><td class="r">$115.86</td><td class="r"><strong>$215.93</strong></td></tr>
         <tr><td><strong>Mailgun</strong></td><td>USD</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r"><strong>$175.00</strong></td></tr>
         <tr><td><strong>Labs Mobile</strong></td><td>PEN</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">S/ 709</td><td class="r">S/ 990</td><td class="r">S/ 365</td><td class="r"><strong>S/ 2,064</strong></td></tr>
         <tr><td><strong>Kontactus</strong></td><td>PEN</td><td class="r">S/ 1,452</td><td class="r">S/ 1,512</td><td class="r">S/ 1,513</td><td class="r">S/ 1,770</td><td class="r">S/ 1,716</td><td class="r"><strong>S/ 7,963</strong></td></tr>
       </tbody>
     </table>
-    <div class="footnote">Costos asignados al mes de actividad, no al de facturacion (1 mes de desfase en Blip y Botmaker). Voximplant ene/feb/may = recargas; mar/abr = consumo real.</div>
+    <div class="footnote">Costos asignados al mes de actividad, no al de facturacion (1 mes de desfase en Blip y Botmaker). Voximplant ene/feb/may = recargas depositadas (no consumo). Mar/Abr = consumo real desglosado. Mayo: recarga $1,500 pero consumo PSTN+AMD real ~$566 (API searchCalls); falta factura detallada para Kit y WA HSM.</div>
   </div>
 
   <!-- Graficos de barras -->
@@ -948,8 +950,8 @@
         <!-- LLAMADAS — Cobranza (dialer)                                  -->
         <!-- ============================================================ -->
         <tr class="group-row"><td colspan="6">Llamadas &mdash; Cobranza (dialer)</td></tr>
-        <tr><td class="indent">Voximplant campaigns</td>
-          <td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+        <tr><td class="indent">Voximplant llamadas (API)</td>
+          <td class="r">45</td><td class="r">115,501</td><td class="r">66,088</td><td class="r">80,289</td><td class="r">109,689</td></tr>
         <tr><td class="indent">Kontactus CDR</td>
           <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
 
@@ -1173,12 +1175,12 @@
           <tr><td></td><td>Blip WA</td><td class="r">123,244</td><td class="r">79,674</td><td class="r">92,997</td><td class="r">95,142</td><td class="r">82,532</td></tr>
           <tr><td></td><td>Botmaker WA</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
           <tr><td></td><td>Voximplant WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
-          <tr><td></td><td>Voximplant llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+          <tr><td></td><td>Voximplant llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">66,088</td><td class="r">80,289</td><td class="r">109,689</td></tr>
           <tr><td></td><td>Kontactus llamadas</td><td class="r">~6,200</td><td class="r">~26,900</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
           <tr><td></td><td>Labs Mobile SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
           <tr><td></td><td>GoHighLevel emails</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
           <tr><td></td><td>Mailgun emails (19.3%)</td><td class="r">3,247</td><td class="r">4,117</td><td class="r">5,393</td><td class="r">&mdash;</td><td class="r">12,598</td></tr>
-          <tr class="subtotal"><td></td><td><strong>Subtotal cobranza</strong></td><td class="r"><strong>161,038</strong></td><td class="r"><strong>247,547</strong></td><td class="r"><strong>287,639</strong></td><td class="r"><strong>343,437</strong></td><td class="r"><strong>235,160</strong></td></tr>
+          <tr class="subtotal"><td></td><td><strong>Subtotal cobranza</strong></td><td class="r"><strong>161,038</strong></td><td class="r"><strong>247,547</strong></td><td class="r"><strong>289,929</strong></td><td class="r"><strong>339,474</strong></td><td class="r"><strong>310,049</strong></td></tr>
 
           <tr class="group-row"><td colspan="7">COMERCIAL (retargeting + entrega + otros)</td></tr>
           <tr><td></td><td>Blip WA</td><td class="r">1,916</td><td class="r">4,281</td><td class="r">28,950</td><td class="r">35,445</td><td class="r">&mdash;</td></tr>
@@ -1188,7 +1190,7 @@
           <tr><td></td><td>Blip WA</td><td class="r">2,427</td><td class="r">4,370</td><td class="r">7,741</td><td class="r">18,241</td><td class="r">11,045</td></tr>
           <tr><td></td><td>Mailgun emails (51.3%)</td><td class="r">8,612</td><td class="r">10,918</td><td class="r">14,303</td><td class="r">&mdash;</td><td class="r">33,411</td></tr>
 
-          <tr class="subtotal"><td colspan="2"><strong>TOTAL GLOBAL</strong></td><td class="r"><strong>178,934</strong></td><td class="r"><strong>273,381</strong></td><td class="r"><strong>346,839</strong></td><td class="r"><strong>397,123</strong></td><td class="r"><strong>298,786</strong></td></tr>
+          <tr class="subtotal"><td colspan="2"><strong>TOTAL GLOBAL</strong></td><td class="r"><strong>178,934</strong></td><td class="r"><strong>273,381</strong></td><td class="r"><strong>349,129</strong></td><td class="r"><strong>393,160</strong></td><td class="r"><strong>373,675</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -1204,12 +1206,12 @@
           <tr class="highlight-row"><td><strong>Blip</strong></td><td>WA templates</td><td class="r">127,587</td><td class="r">88,325</td><td class="r">129,688</td><td class="r">148,828</td><td class="r">93,577</td></tr>
           <tr><td><strong>Botmaker</strong></td><td>WA sesiones</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
           <tr class="highlight-row"><td><strong>Voximplant</strong></td><td>WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
-          <tr><td><strong>Voximplant</strong></td><td>Llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+          <tr><td><strong>Voximplant</strong></td><td>Llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">66,088</td><td class="r">80,289</td><td class="r">109,689</td></tr>
           <tr class="highlight-row"><td><strong>Kontactus</strong></td><td>Llamadas</td><td class="r">~6,200</td><td class="r">~26,900</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
           <tr><td><strong>Labs Mobile</strong></td><td>SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
           <tr class="highlight-row"><td><strong>GoHighLevel</strong></td><td>Email cobr.</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
           <tr><td><strong>Mailgun</strong></td><td>Email trans.</td><td class="r">16,800</td><td class="r">21,300</td><td class="r">27,902</td><td class="r">&mdash;</td><td class="r">65,179</td></tr>
-          <tr class="subtotal"><td colspan="2"><strong>TOTAL</strong></td><td class="r"><strong>183,634</strong></td><td class="r"><strong>257,381</strong></td><td class="r"><strong>346,839</strong></td><td class="r"><strong>397,123</strong></td><td class="r"><strong>298,786</strong></td></tr>
+          <tr class="subtotal"><td colspan="2"><strong>TOTAL</strong></td><td class="r"><strong>183,634</strong></td><td class="r"><strong>257,381</strong></td><td class="r"><strong>349,129</strong></td><td class="r"><strong>393,160</strong></td><td class="r"><strong>373,675</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -2014,7 +2016,7 @@
         { label: 'Blip WA', data: [127587,88325,129688,148828], backgroundColor: ink, borderRadius: 2 },
         { label: 'Botmaker', data: [28302,19696,3662,0], backgroundColor: '#444', borderRadius: 2 },
         { label: 'Vox HSM', data: [0,1659,46115,37350], backgroundColor: s1, borderRadius: 2 },
-        { label: 'Vox Calls', data: [45,115501,63798,84252], backgroundColor: s2, borderRadius: 2 },
+        { label: 'Vox Calls', data: [45,115501,66088,80289], backgroundColor: s2, borderRadius: 2 },
         { label: 'Kontactus', data: [6200,26900,66094,109755], backgroundColor: s3, borderRadius: 2 },
         { label: 'Labs SMS', data: [0,0,9580,12659], backgroundColor: '#ccc', borderRadius: 2 },
         { label: 'GHL Email', data: [0,0,0,4279], backgroundColor: '#aaa', borderRadius: 2 },
@@ -2072,7 +2074,7 @@
         { label: 'Blip WA', data: [127587,88325,129688,148828,93577], backgroundColor: ink, borderRadius: 2 },
         { label: 'Botmaker', data: [28302,19696,3662,0,0], backgroundColor: '#444', borderRadius: 2 },
         { label: 'Vox HSM', data: [0,1659,46115,37350,20584], backgroundColor: s1, borderRadius: 2 },
-        { label: 'Vox Calls', data: [45,115501,63798,84252,34800], backgroundColor: s2, borderRadius: 2 },
+        { label: 'Vox Calls', data: [45,115501,66088,80289,109689], backgroundColor: s2, borderRadius: 2 },
         { label: 'Kontactus', data: [6200,26900,66094,109755,69176], backgroundColor: s3, borderRadius: 2 },
         { label: 'Labs SMS', data: [0,0,9580,12659,4003], backgroundColor: '#ccc', borderRadius: 2 },
         { label: 'GHL Email', data: [0,0,0,4279,11467], backgroundColor: '#aaa', borderRadius: 2 },
