@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — Drivers de Gasto</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f5f4f0; color: #1a1a1a; line-height: 1.7; }
+  .page { max-width: 800px; margin: 0 auto; background: #fff; padding: 48px 40px; min-height: 100vh; }
+
+  .header { padding-bottom: 20px; border-bottom: 3px double #1a1a1a; margin-bottom: 40px; }
+  .header .kicker { font-family: -apple-system, system-ui, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 6px; }
+  .header h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.5px; }
+  .header .subtitle { font-size: 14px; color: #666; font-style: italic; margin-top: 6px; }
+
+  h2 { font-size: 20px; font-weight: 400; color: #1a1a1a; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a; margin: 40px 0 16px; }
+  h2 .num { font-family: -apple-system, system-ui, sans-serif; font-size: 13px; color: #999; font-weight: 600; margin-right: 8px; }
+  h3 { font-size: 16px; font-weight: 600; color: #1a1a1a; margin: 24px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: #1a1a1a; margin: 18px 0 8px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 6px; }
+
+  .info-box { background: #f9f8f4; border: 1px solid #ebeae3; border-radius: 4px; padding: 16px 20px; margin: 16px 0; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; line-height: 1.6; }
+  .info-box strong { color: #1a1a1a; }
+  .info-box code { background: #ebeae3; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+  .warn-box { background: #fef9e7; border: 1px solid #fde68a; border-radius: 4px; padding: 16px 20px; margin: 16px 0; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; }
+
+  .file-list { font-family: -apple-system, system-ui, sans-serif; font-size: 13px; }
+  .file-list code { background: #ebeae3; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; margin: 16px 0; }
+  th { background: #ebeae3; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; font-weight: 600; }
+  td { padding: 8px 12px; border-bottom: 1px solid #ececec; }
+  tr:last-child td { border-bottom: none; }
+
+  .color-sample { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; color: #fff; font-family: -apple-system, system-ui, sans-serif; }
+
+  .toc { margin: 0 0 32px; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; }
+  .toc ol { counter-reset: toc; list-style: none; margin: 8px 0 0 0; padding: 0; }
+  .toc li { counter-increment: toc; padding: 4px 0; border-bottom: 1px solid #f0f0ec; }
+  .toc li::before { content: counter(toc) "."; display: inline-block; width: 24px; color: #999; font-weight: 600; }
+  .toc .toc-pre { font-style: italic; color: #666; padding: 4px 0; border-bottom: 1px solid #f0f0ec; }
+
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #ececec; font-family: -apple-system, system-ui, sans-serif; font-size: 11px; color: #999; text-align: center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="kicker">Baldecash &middot; Documentacion interna</div>
+  <h1>Manual del Reporte: Drivers de Gasto</h1>
+  <div class="subtitle">Mensajeria y voz &middot; Enero&ndash;Mayo 2026 &middot; Guia de lectura, metodologia y archivos de datos</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2>Descripcion general</h2>
+
+<p>El reporte <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">drivers-de-costo.html</code> analiza el gasto en comunicaciones de BaldeCash desglosado por proveedor, uso de negocio y destinatario. Responde a preguntas como:</p>
+<ul>
+  <li>Cuanto cuesta cobrar a un cliente en mora?</li>
+  <li>Cuanto cuesta cada solicitud de credito procesada?</li>
+  <li>Cuanto cuesta adquirir una firma de retargeting?</li>
+  <li>Estamos pagando de mas a algun proveedor?</li>
+</ul>
+
+<div class="info-box">
+  <strong>Archivo principal:</strong> <code>drivers-de-costo.html</code><br><br>
+  <strong>Archivos de datos necesarios (misma carpeta):</strong>
+  <ul class="file-list" style="margin-top:8px;">
+    <li><code>phone_inline.js</code> &mdash; 34,955 numeros con msgs por mes (1.3 MB)</li>
+    <li><code>template_data.js</code> &mdash; 207 plantillas con categoria Meta y volumen por mes (17 KB)</li>
+    <li><code>template_phones.js</code> &mdash; plantilla &times; telefono &times; mes (4.8 MB)</li>
+    <li><code>template_contents.js</code> &mdash; 480 textos de plantillas para vista previa (174 KB)</li>
+    <li><code>template_totals.js</code> &mdash; totales mensuales por area y tipo Meta (peque&ntilde;o)</li>
+    <li><code>calls_data.js</code> &mdash; llamadas Voximplant por numero destino (126 KB+)</li>
+    <li><code>dias_atraso_data.js</code> &mdash; mensajes de cobranza por tramo de mora (peque&ntilde;o)</li>
+  </ul>
+  <br>
+  <strong>Periodo:</strong> Enero&ndash;Mayo 2026 (costos solo ene&ndash;abr; mayo sin factura Blip)<br>
+  <strong>Monedas:</strong> USD (Blip, Botmaker, Voximplant, GoHighLevel, Mailgun) + PEN (Kontactus, Labs Mobile)
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2>Indice de secciones</h2>
+
+<div class="toc">
+  <div class="toc-pre">Resumen ejecutivo &mdash; Tablas de volumen y gasto + 2 graficos de barras</div>
+  <ol>
+    <li>Facturado por concepto &mdash; lineas de factura por proveedor</li>
+    <li>Costo por uso de negocio &mdash; reclasificacion funcional (la seccion clave)</li>
+    <li>Volumen global de comunicaciones &mdash; todos los canales por area y plataforma</li>
+    <li>Desglose por grupo de campanas &mdash; volumen y costo por campana</li>
+    <li>Intensidad de envio por numero &mdash; distribucion, concentracion, cruce factura</li>
+    <li>Detalle: envios por numero (interactiva) &mdash; 34,955 numeros</li>
+    <li>Detalle: envios por plantilla (interactiva) &mdash; 207 plantillas, expandible</li>
+    <li>Detalle: llamadas Voximplant (interactiva) &mdash; PSTN por numero</li>
+    <li>Ficha por plantilla &mdash; resumen con filtros y detalle individual</li>
+    <li>Cobranza por dias de atraso (interactiva) &mdash; mensajes por tramo de mora</li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2>Resumen ejecutivo (antes de Seccion 1)</h2>
+<p>Aparece al inicio del reporte, sin numero de seccion. Es la vista ejecutiva.</p>
+
+<h3>Volumen por plataforma</h3>
+<p>Tabla con la cantidad de mensajes, llamadas, emails y SMS de cada proveedor por mes. Es el <em>&ldquo;cuanto enviamos&rdquo;</em>.</p>
+<table>
+  <tr><th>Plataforma</th><th>Que mide</th><th>Fuente</th></tr>
+  <tr><td><strong>Blip</strong></td><td>Templates WhatsApp enviados desde el backend</td><td>DB <code>blip_whatsapp_logs</code></td></tr>
+  <tr><td><strong>Botmaker</strong></td><td>Sesiones WA (pausada desde marzo 2026)</td><td>Dashboard Botmaker</td></tr>
+  <tr><td><strong>Voximplant</strong></td><td>Llamadas predictivas + WA HSM</td><td>API <code>agentCampaigns</code> + DB</td></tr>
+  <tr><td><strong>Kontactus</strong></td><td>CDR de llamadas (ene/feb son estimados)</td><td>PDFs de reportes</td></tr>
+  <tr><td><strong>GoHighLevel</strong></td><td>Emails de cobranza</td><td>Dashboard GHL</td></tr>
+  <tr><td><strong>Mailgun</strong></td><td>Emails transaccionales</td><td>Dashboard Mailgun</td></tr>
+  <tr><td><strong>Labs Mobile</strong></td><td>SMS de cobranza</td><td>PDFs de reportes</td></tr>
+</table>
+
+<div class="info-box">
+  <strong>Nota Botmaker:</strong> Los volumenes del dashboard (ej. 28,302 sesiones ene) difieren de los logs DB (28,090) usados en Seccion 9. La diferencia son sesiones sin template HSM registrado. Los costos se calculan con datos de factura, no con estos volumenes.
+</div>
+
+<h3>Gasto por plataforma</h3>
+<p>Costo facturado por proveedor asignado al mes de actividad. Es el <em>&ldquo;cuanto pagamos&rdquo;</em>.</p>
+
+<div class="warn-box">
+  <strong>Desfase de facturacion:</strong> Las facturas de Blip y Botmaker tienen 1 mes de desfase. INV/00180 (emitida febrero) corresponde a actividad de enero. Los costos se asignan siempre al mes de actividad, no al de emision.
+</div>
+
+<h3>Graficos de barras</h3>
+<ul>
+  <li><strong>Volumen por plataforma</strong> &mdash; barras apiladas mostrando la composicion mensual</li>
+  <li><strong>Gasto USD por plataforma</strong> &mdash; barras agrupadas mostrando el costo por proveedor</li>
+</ul>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">1</span>Facturado por concepto</h2>
+<p>Desglose exacto de cada linea de factura por proveedor. Las facturas se asignan al mes de actividad, no al de emision.</p>
+
+<h3>Blip &mdash; 5 lineas por factura</h3>
+<table>
+  <tr><th>Linea</th><th>Tarifa</th><th>Que es</th></tr>
+  <tr><td><strong>MAUS Monthly Fee</strong></td><td>$600 fijo</td><td>Costo fijo mensual por servicio de chatbot</td></tr>
+  <tr><td><strong>Additional Automated Conversations</strong></td><td>$0.007/conv</td><td>Cada interaccion del chatbot (usuario escribe, bot responde). Incluye menus, flujos, GPT</td></tr>
+  <tr><td><strong>WA Marketing Conversations</strong></td><td>$0.0803/conv</td><td>Fee Meta por conversacion WA categoria Marketing (ventana 24hrs). 3 templates al mismo usuario en un dia = 1 conversacion</td></tr>
+  <tr><td><strong>WA Utility Conversations</strong></td><td>$0.03/conv</td><td>Fee Meta por conversaciones Utility (locker truck, school rental)</td></tr>
+  <tr><td><strong>WA Authentication Conversations</strong></td><td>$0.03/conv</td><td>Fee Meta por verificaciones de identidad (WhatsApp code)</td></tr>
+</table>
+
+<h4>Tabla de conversaciones vs mensajes</h4>
+<p>Incluida dentro de Blip. Meta cobra por <em>conversacion</em> (ventana de 24hrs), no por mensaje. Por eso la factura muestra menos unidades que la DB. Columnas: Conv MKT factura, Templates DB, Ratio msgs/conv, Costo/conversacion MKT, y Costo efectivo/mensaje.</p>
+
+<div class="info-box">
+  <strong>Lectura:</strong> En enero el ratio era 2.37 (cada conversacion contenia ~2.4 templates en promedio), bajando a 1.47 en abril. A medida que se consolidan menos mensajes por ventana, el costo efectivo por mensaje sube ($0.034 ene &rarr; $0.055 abr).
+</div>
+
+<h4>Tabla de costo por tipo Meta</h4>
+<p>Debajo de la tabla anterior. Muestra para cada tipo (MARKETING, UTILITY, AUTHENTICATION): mensajes DB, costo facturado, conversaciones, y costo efectivo por mensaje. El 96-99% de los mensajes son MARKETING.</p>
+
+<div class="warn-box">
+  <strong>Oportunidad de ahorro:</strong> Recategorizar plantillas transaccionales (confirmacion solicitud, firma contrato) de MKT a UTIL reduciria el fee de $0.0803 a $0.03/conv (ahorro 63%).
+</div>
+
+<h3>Botmaker &mdash; pausada desde marzo 2026</h3>
+<p>Desglose por linea de factura: plan ($249), usuarios diarios adicionales, lineas WA, conversaciones MKT/UTIL, conv. iniciadas por usuarios, AI tokens + admin. 100% cobranza (verificado en DB: todas las etapas son &ldquo;Derivar Cobranza Gestor&rdquo; o &ldquo;Cobranza Excel&rdquo;).</p>
+
+<h3>Voximplant &mdash; modelo prepago</h3>
+<p>Muestra recargas (ene/feb/may) o consumo real desglosado (mar/abr): Kit package, Services (WA HSM), Outbound PSTN, Voicemail detection, Speech synthesis, Phone numbers, Inbound PSTN, Call recording.</p>
+
+<div class="warn-box">
+  <strong>Anomalia detectada:</strong> &ldquo;Services&rdquo; (WA HSM) paso de $102 en marzo (46K msgs, $0.0022/msg) a $1,046 en abril (37K msgs, $0.028/msg) con MENOS mensajes. Posible periodo trial en marzo. Si abril es la tarifa real, marzo debio costar ~$1,291. Confirmar con Voximplant si hubo cambio de plan o periodo de gracia.
+</div>
+
+<h3>GoHighLevel</h3>
+<p>Suscripcion $97/mes + Email MKT wallet (variable). Activo desde abril.</p>
+
+<h3>Mailgun</h3>
+<p>Foundation 50k = $35/mes (fijo).</p>
+
+<h3>Labs Mobile (PEN)</h3>
+<p>Creditos prepago SMS de cobranza. Activo desde marzo.</p>
+
+<h3>Kontactus (PEN)</h3>
+<p>Servicio mensual de llamadas. Ene/feb son estimados de CDR.</p>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">2</span>Costo por uso de negocio</h2>
+<p><strong>Esta es la seccion clave del reporte.</strong> Reclasifica el gasto facturado por funcion de negocio, no por proveedor. Contiene multiples bloques:</p>
+
+<h3>Estructura de cada grupo de uso</h3>
+<ol>
+  <li><strong>Cantidad de mensajes</strong> &mdash; con desglose por proveedor, numeros destino, y msgs/numero</li>
+  <li><strong>Costo plataforma</strong> &mdash; Automated Conv ($0.007) distribuido proporcionalmente por phone&times;day</li>
+  <li><strong>Fee Meta</strong> &mdash; conv. MKT distribuidas proporcionalmente por phone&times;day; UTIL y AUTH asignados directo a preadmision</li>
+  <li><strong>Total</strong> = plataforma + fee Meta</li>
+  <li><strong>Denominador</strong> &mdash; base de clientes relevante</li>
+  <li><strong style="background:#fef9e7;padding:2px 6px;">&#9654; Costo unitario</strong> = Total / Denominador (fila amarilla &mdash; el DRIVER)</li>
+</ol>
+
+<h3>FIJOS</h3>
+<p>Costos que se pagan independientemente del volumen: Plan Botmaker, Lineas WA Botmaker, MAUS $600 Blip, Voximplant Kit + Phone numbers, GHL suscripcion, Mailgun Foundation.</p>
+
+<div class="info-box">
+  <strong>MAUS $600 queda en FIJOS</strong> &mdash; no se distribuye a los grupos de uso. Solo el Automated Conv ($0.007) se distribuye proporcionalmente.
+</div>
+
+<h3>Transaccionales / Preadmision</h3>
+<p>Confirmacion de solicitud, firma de contrato, verificacion WhatsApp, rechazo crediticio.</p>
+<div class="info-box">
+  <strong>Denominador:</strong> Solicitudes del mes (tabla <code>solicitud</code> filtrada por <code>created_at</code>)<br>
+  <strong>Driver:</strong> Costo por solicitud. Subio de $0.054 (ene) a $0.153 (abr) por mas mensajes por solicitud + crecimiento de UTIL/AUTH.<br>
+  <strong>Fee Meta:</strong> MKT conv proporcional + UTIL directo + AUTH directo (solo preadmision recibe UTIL y AUTH).
+</div>
+
+<h3>Cobranza en mora</h3>
+<p>Templates de cobranza a morosos (&gt;0 dpd). Suma Blip + Botmaker + Voximplant + GHL. Incluye desglose por proveedor: Blip plataforma, Blip fee Meta, Botmaker WA, Voximplant, GHL wallet.</p>
+<div class="info-box">
+  <strong>Denominador:</strong> Morosos gestionados = solicitudes unicas de <code>moroso_historico</code><br>
+  <strong>Driver:</strong> Costo / moroso gestionado. Ejemplo abril: $7,759 / 4,802 morosos = <strong>$1.62/moroso</strong>.<br>
+  <strong>Nota:</strong> Botmaker y Voximplant se asignan 100% a cobranza (verificado en DB).
+</div>
+
+<h3>Cobranza preventiva</h3>
+<p>Mensajes preventivos y recordatorios enviados antes del vencimiento (dpd &le; 0). Solo Blip WA. Incluye preventivos por riesgo, recordatorio_grupo_ab, recordatorio_abril_vigente.</p>
+<p>No tiene denominador/driver propio &mdash; se muestra solo el subtotal.</p>
+
+<h3>Comercial (retargeting + entrega + otros)</h3>
+<p>Campanas masivas (sorteos, difusion), referidos, locker truck, bienvenida, encuestas.</p>
+<div class="info-box">
+  <strong>Denominador:</strong> Firmas retargeting = <code>solicitud.status='aprobado'</code> donde <code>source IN ('campaign-segundo', 'renueva-tu-laptop')</code><br>
+  <strong>Driver:</strong> Costo por firma. Es alto ($2&ndash;$45) porque las campanas son masivas pero pocas convierten.
+</div>
+
+<h3>Entrega / Ops</h3>
+<p>Locker truck, logistica, school rental. Muestra solo mensajes Blip WA y Fee Meta estimado.</p>
+
+<h3>Otros WA</h3>
+<p>Bienvenida cliente, encuesta satisfaccion, sin clasificar. Muestra mensajes y fee Meta estimado.</p>
+
+<h3>Llamadas</h3>
+<p>Agrupa: Voximplant Outbound PSTN + Voicemail + Speech synthesis + Kontactus (PEN) + Labs Mobile SMS (PEN) + GHL email wallet. Subtotales separados en USD y PEN.</p>
+
+<h3>Otros (no atribuibles a un mensaje)</h3>
+<p>Botmaker: AI Agents, Productivity AI, GenAI tokens, Usuarios diarios adicionales, Cargos admin. Solo enero y febrero.</p>
+
+<h3>Consolidado: costo variable por uso de negocio</h3>
+<p>Tabla resumen que cruza los 3 usos principales con datos reales de facturas:</p>
+<ul>
+  <li><strong>Cobranza mora</strong> &mdash; total + desglose (Blip plataforma, Blip fee Meta, Botmaker, Voximplant, GHL)</li>
+  <li><strong>Comercial</strong> &mdash; Blip plataforma + fee Meta proporcional</li>
+  <li><strong>Preadmision</strong> &mdash; Blip plataforma + fee Meta proporcional (incl. UTIL/AUTH)</li>
+  <li><strong>Total costo variable WA+voz</strong></li>
+</ul>
+
+<h3>Llamadas &mdash; Cobranza (dialer)</h3>
+<p>Volumen de llamadas Voximplant campaigns + Kontactus CDR. Sin costo unitario (dato en la seccion de facturacion).</p>
+
+<h3>Inbound</h3>
+<p>Trafico entrante con fee Meta = $0 (service conversations gratis).</p>
+<ul>
+  <li>Blip WA msgs recibidos + contactos que interactuaron</li>
+  <li>Voximplant llamadas entrantes PSTN + chats WA entrantes</li>
+  <li>Botmaker conv. iniciadas por usuarios</li>
+  <li>Mailgun emails</li>
+</ul>
+<p>El costo se limita a plataforma: Blip Automated proporcional (~18.8% en abril), Voximplant Inbound PSTN, Botmaker conv. usuarios. Muestra costo/msg entrante y costo/llamada entrante.</p>
+
+<h3>Reconciliacion</h3>
+<p>Verifica que la suma del breakdown cuadre con el total facturado (Seccion 1).</p>
+<table>
+  <tr><th>Fila</th><th>Que muestra</th></tr>
+  <tr><td>Total facturado USD</td><td>Debe coincidir con Seccion 1</td></tr>
+  <tr><td>Fee WA (real, de facturas)</td><td>Porcion que va a Meta/WhatsApp</td></tr>
+  <tr><td><strong>Residual</strong></td><td>Facturado &minus; fee WA = costo de plataforma (MAUS, automated, usuarios, AI)</td></tr>
+  <tr><td>Fee WA como % del facturado</td><td>Crece de 56% (ene) a 70% (abr) a medida que el fee WA domina</td></tr>
+  <tr><td>Total facturado PEN</td><td>Kontactus + Labs Mobile</td></tr>
+</table>
+
+<h3>Total reconstruido</h3>
+<p>Ultimo bloque. Muestra para cada proveedor: unidades facturadas &times; tarifa contractual = monto. Permite comparar con mensajes reales (DB) para detectar si se paga de mas.</p>
+<ul>
+  <li><strong>Blip:</strong> MAUS + Automated + WA MKT + UTIL + AUTH = subtotal. Referencia: msgs DB y ratio msgs/conv.</li>
+  <li><strong>Botmaker:</strong> Plan + lineas + usuarios diarios + WA MKT + UTIL + Users + AI = subtotal.</li>
+  <li><strong>Voximplant:</strong> Kit + Phone numbers + Outbound PSTN + Voicemail + Speech + Recording + Inbound + Services. Incluye nota de anomalia en Services.</li>
+  <li><strong>GHL:</strong> Suscripcion + email wallet.</li>
+  <li><strong>Mailgun:</strong> Foundation 50k.</li>
+  <li><strong>PEN:</strong> Kontactus + Labs Mobile con referencia de volumenes.</li>
+  <li><strong>TOTAL RECONSTRUIDO USD y PEN</strong> con verificacion cruzada linea por linea contra Seccion 1.</li>
+</ul>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">3</span>Volumen global de comunicaciones</h2>
+<p>Tabla consolidada de TODOS los mensajes, llamadas, emails y SMS por area de negocio (Cobranza / Comercial / Preadmision) y por plataforma. Incluye 2 graficos stacked bar: volumen por area y volumen por plataforma.</p>
+
+<div class="info-box">
+  <strong>Distribucion Mailgun:</strong> Los emails se distribuyen proporcionalmente entre areas segun las 122 plantillas activas: 19.3% cobranza, 29.4% comercial, 51.3% preadmision. Es una aproximacion, no por envio real.<br><br>
+  <strong>Lectura:</strong> Cobranza domina el volumen (88-96% del total). Abril fue el pico con 397K comunicaciones. Mayo parcial (al dia 26).
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">4</span>Desglose por grupo de campanas</h2>
+<p>Granularidad maxima: cada campana/grupo de plantillas con volumen Y costo por mes y proveedor.</p>
+
+<h3>Grupos incluidos</h3>
+<table>
+  <tr><th>Area</th><th>Grupos</th></tr>
+  <tr><td><strong>Cobranza</strong></td><td>Morosos (dia X), Preventivos, Autoreprogramacion, Recordatorio grupo, Gestores por nombre (Botmaker: Jahaira, Julio, Yosmar, Lidymar, Anderson), Cobranza moderada (Voximplant WA HSM: moderada, moderada_v2, gestores), SMS cobranza (Labs Mobile), Email cobranza (GHL)</td></tr>
+  <tr><td><strong>Comercial</strong></td><td>Campanas masivas (sorteos, difusion), Referidos / embajadores</td></tr>
+  <tr><td><strong>Preadmision</strong></td><td>Confirmacion de solicitud, Decision crediticia (aprobacion/rechazo), Firma de contrato, Verificacion (WhatsApp code)</td></tr>
+  <tr><td><strong>Entrega / Ops</strong></td><td>Locker Truck, Logistica (entrega, recojo), School Rental</td></tr>
+  <tr><td><strong>Otros</strong></td><td>Bienvenida cliente, Encuesta satisfaccion, Sin clasificar</td></tr>
+</table>
+
+<h3>Costo blended por mensaje</h3>
+<div class="info-box">
+  <strong>Formula:</strong> Costo Blip/msg = factura total Blip / templates DB. Incluye plataforma (MAUS + Automated) + fee WA (MKT + UTIL + AUTH).<br><br>
+  ENE: $0.047/msg &middot; FEB: $0.068/msg &middot; MAR: $0.068/msg &middot; ABR: $0.075/msg<br><br>
+  <strong>Verificacion contra factura:</strong> Suma de todos los grupos &times; costo blended = factura Blip con diferencia &lt;$7 por redondeo (el costo blended no distingue MKT $0.0803 vs UTIL $0.03).<br><br>
+  <strong>Botmaker:</strong> costo por log DB. <strong>Voximplant:</strong> Services de factura. <strong>Labs Mobile / Kontactus:</strong> PEN, no sumados al total USD.
+</div>
+
+<div class="warn-box">
+  <strong>Clasificacion:</strong> Automatica por nombre de template. &ldquo;Sin clasificar&rdquo; incluye templates nuevos o con nombres no estandarizados &mdash; 29% en enero (primer mes), baja a 5-9% despues.
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">5</span>Intensidad de envio por numero</h2>
+<p>Distribucion de cuantos templates Blip WA recibe cada telefono al mes. Tres subtablas:</p>
+
+<h3>Tabla de distribucion</h3>
+<p>Filas: rangos de msgs/telefono (1, 2-3, 4-5, 6-10, 11-15, 16-20, 21-30, 31-50, 50+). Columnas: phones / msgs por mes. Total y promedio msgs/phone.</p>
+
+<h3>Concentracion (telefonos con 21+ msgs/mes)</h3>
+<p>~11-19% de los telefonos generan 47-64% de todos los mensajes. Son clientes en mora recurrente con cobranza diaria.</p>
+
+<h3>Cruce con factura</h3>
+<p>Compara templates DB vs phone&times;day combos vs conversaciones facturadas (MKT+UTIL+AUTH).</p>
+<div class="info-box">
+  <strong>Ratio clave:</strong> phone&times;day / conv factura. En enero era 1.86x (mucho envio por ventana), en abril convergio a 1.09x (casi 1:1). Confirma que Blip cobra aproximadamente lo correcto.<br><br>
+  Los envios de prueba (source=test, numeros 999999xxx) son &lt;0.5% del volumen y no explican la diferencia.
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">6</span>Detalle: envios por numero <em>(interactiva)</em></h2>
+<p>Tabla con 34,955 numeros unicos. Datos cargados desde <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">phone_inline.js</code>.</p>
+
+<h3>Controles</h3>
+<ul>
+  <li><strong>Selector de mes</strong> &mdash; muestra solo los numeros activos ese mes, con conteo en el dropdown</li>
+  <li><strong>Busqueda</strong> &mdash; filtrar por numero especifico</li>
+  <li><strong>Paginacion</strong> &mdash; navegacion inferior</li>
+</ul>
+
+<h3>Columnas</h3>
+<p>#, Numero, Mensajes, Costo (USD).</p>
+
+<h3>Indicadores visuales</h3>
+<table>
+  <tr><th>Color</th><th>Significado</th></tr>
+  <tr><td><span class="color-sample" style="background:#fef9e7;border:1px solid #ddd;"></span>Amarillo</td><td>Numeros con 50+ mensajes (heavy senders)</td></tr>
+  <tr><td><span class="color-sample" style="background:#fafaf6;border:1px solid #ddd;"></span>Crema</td><td>Numeros con 21+ mensajes</td></tr>
+  <tr><td><span class="color-sample" style="background:#fde8e8;border:1px solid #ddd;"></span>Rojo + <span class="tag" style="background:#c62828;">PRUEBA</span></td><td>Numeros test detectados (999999xx y similares)</td></tr>
+</table>
+
+<h3>Resumen inferior</h3>
+<p>Caja con totales del mes seleccionado: total numeros, total mensajes, total costo, y promedio msgs/numero.</p>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">7</span>Detalle: envios por plantilla <em>(interactiva)</em></h2>
+<p>207 plantillas de 3 proveedores (Blip, Voximplant, Botmaker). Solo WhatsApp. Datos de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_data.js</code>, <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_phones.js</code> y <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_contents.js</code>.</p>
+
+<h3>Controles (5 filtros)</h3>
+<ul>
+  <li><strong>Mes</strong> &mdash; Todos / Enero / Febrero / Marzo / Abril / Mayo</li>
+  <li><strong>Categoria</strong> &mdash; Cobranza mora / Cobranza preventiva / Comercial / Preadmision / Entrega / Ops / Otros</li>
+  <li><strong>Proveedor</strong> &mdash; Blip / Voximplant / Botmaker</li>
+  <li><strong>Tipo Meta</strong> &mdash; Marketing ($0.0803) / Utility ($0.03) / Authentication ($0.03)</li>
+  <li><strong>Busqueda</strong> &mdash; por nombre de plantilla</li>
+</ul>
+
+<h3>Columnas</h3>
+<p>Proveedor (dot color), Plantilla, Area (tag), Tipo Meta, Msgs, Costo, boton Ver (contenido).</p>
+
+<h3>Expandir numeros</h3>
+<p><strong>Click en una fila</strong> despliega los numeros de celular que recibieron esa plantilla ese mes, con paginacion de 50 en 50. Muestra mensajes y costo por numero.</p>
+
+<h3>Boton &ldquo;Ver&rdquo;</h3>
+<p>Abre un modal con el texto completo de la plantilla (datos de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_contents.js</code>).</p>
+
+<h3>Indicadores visuales</h3>
+<table>
+  <tr><th>Elemento</th><th>Significado</th></tr>
+  <tr><td><span class="tag" style="background:#1a1a1a;">cobranza</span></td><td>Templates de cobranza en mora</td></tr>
+  <tr><td><span class="tag" style="background:#555;">preventiva</span></td><td>Cobranza preventiva</td></tr>
+  <tr><td><span class="tag" style="background:#666;">comercial</span></td><td>Retargeting, campanas, referidos</td></tr>
+  <tr><td><span class="tag" style="background:#888;">preadmision</span></td><td>Confirmaciones, firma, verificacion</td></tr>
+  <tr><td><span class="tag" style="background:#aaa;">entrega</span></td><td>Locker truck, logistica</td></tr>
+  <tr><td><span class="tag" style="background:#ccc;color:#333;">otros</span></td><td>Bienvenida, encuestas, sin clasificar</td></tr>
+  <tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0ea5e9;vertical-align:middle;"></span> Azul</td><td>Proveedor: Blip</td></tr>
+  <tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;vertical-align:middle;"></span> Amarillo</td><td>Proveedor: Voximplant</td></tr>
+  <tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8b5cf6;vertical-align:middle;"></span> Morado</td><td>Proveedor: Botmaker</td></tr>
+</table>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">8</span>Detalle: llamadas Voximplant <em>(interactiva)</em></h2>
+<p>Llamadas salientes PSTN extraidas de la API de Voximplant (<code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">searchCalls</code>). Datos de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">calls_data.js</code>.</p>
+<ul>
+  <li><strong>Selector de mes</strong> (ene&ndash;may) y <strong>busqueda</strong> por numero destino</li>
+  <li><strong>Columnas:</strong> #, Numero destino, Llamadas, Costo est. (USD)</li>
+  <li><strong>Costo estimado:</strong> ~$0.0033/llamada (derivado de factura abr: $282 / 84,252 llamadas)</li>
+  <li>Solo incluye Voximplant, no Kontactus</li>
+  <li>Meses sin datos muestran &ldquo;no disponible&rdquo;</li>
+</ul>
+
+<div class="warn-box">
+  <strong>Limitacion:</strong> Las llamadas Voximplant pueden tener ~10% faltante por rate limiting de la API.
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">9</span>Ficha por plantilla</h2>
+<p>Dos partes: resumen general + detalle individual. Datos de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_data.js</code>, <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_totals.js</code> y <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">template_contents.js</code>.</p>
+
+<h3>Resumen general (parte superior)</h3>
+<p>Tabla con una fila por periodo mostrando:</p>
+<ul>
+  <li><strong>3 filtros:</strong> Area (cobranza mora, preventiva, comercial, preadmision, entrega, otros) / Tipo Meta (Marketing, Utility, Authentication) / Proveedor (Blip, Voximplant, Botmaker)</li>
+  <li><strong>Columnas:</strong> Periodo, Mensajes, % del total, % del area, % del tipo Meta, Plantillas activas</li>
+</ul>
+<p>Permite ver como evoluciona la concentracion de mensajes mes a mes para una combinacion de filtros.</p>
+
+<h3>Detalle por plantilla individual (parte inferior)</h3>
+<ul>
+  <li><strong>Dropdown:</strong> Seleccionar una plantilla de las 207 disponibles</li>
+  <li><strong>Info box:</strong> Proveedor, area, tipo Meta, total mensajes historico</li>
+  <li><strong>Tabla:</strong> Periodo, Mensajes, % del total, % del area, % del tipo Meta</li>
+  <li><strong>Contenido:</strong> Texto completo de la plantilla en burbuja verde (estilo WhatsApp)</li>
+</ul>
+
+<!-- ════════════════════════════════════════ -->
+<h2><span class="num">10</span>Cobranza por dias de atraso <em>(interactiva)</em></h2>
+<p>Mensajes de cobranza desglosados por tramo de mora. Datos de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">dias_atraso_data.js</code>.</p>
+
+<h3>Controles</h3>
+<ul>
+  <li><strong>Selector de mes</strong> &mdash; Enero a Abril (meses con datos de factura)</li>
+</ul>
+
+<h3>Columnas</h3>
+<p>Dias de atraso, Mensajes, Numeros, Msgs/numero, Costo (USD), % del total.</p>
+
+<h3>Lectura de tramos</h3>
+<table>
+  <tr><th>Tramo</th><th>Significado</th></tr>
+  <tr><td>-4 a -1 dias</td><td>Preventivos enviados antes de la fecha de vencimiento</td></tr>
+  <tr><td>Dia 0</td><td>Dia de vencimiento</td></tr>
+  <tr><td>1&ndash;30 dias</td><td>Morosos tempranos (cobranza activa)</td></tr>
+  <tr><td>31+ dias</td><td>Mora avanzada</td></tr>
+  <tr><td>&ldquo;gestor&rdquo;</td><td>Plantillas de gestores de cobranza (Botmaker/Blip)</td></tr>
+  <tr><td>&ldquo;moderada&rdquo;</td><td>Voximplant WA HSM</td></tr>
+  <tr><td>&ldquo;autoreprog&rdquo;</td><td>Autoreprogramacion</td></tr>
+</table>
+
+<div class="info-box">
+  <strong>Costo:</strong> Calculado con tarifa blended del mes (la misma de Seccion 4).<br><br>
+  <strong>Nota:</strong> Ene y feb no incluyen ~212 y ~4,803 mensajes de gestores Botmaker que no tienen tramo de mora en el nombre de la plantilla. Esos mensajes si estan en Seccion 2 como parte del total cobranza. Mar y abr cuadran al 100%.
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<h2>Metodologia</h2>
+
+<h3>Asignacion de costos al mes de actividad</h3>
+<p>Todas las facturas se asignan al mes en que ocurrio la actividad, no al mes de emision. Blip y Botmaker facturan con 1 mes de desfase.</p>
+
+<h3>Distribucion del costo Blip por area (Seccion 2)</h3>
+<p>Se usa la proporcion de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">phone&times;day</code> (combinaciones unicas telefono + dia) de cada area en la DB:</p>
+<ul>
+  <li><strong>MAUS $600:</strong> Queda en FIJOS, no se distribuye a los grupos</li>
+  <li><strong>Automated Conv ($0.007):</strong> Se distribuye proporcionalmente por phone&times;day de cada area</li>
+  <li><strong>WA MKT conv (factura):</strong> Se distribuyen proporcionalmente por phone&times;day</li>
+  <li><strong>WA UTIL + AUTH:</strong> Se asignan directo a preadmision (confirmaciones y verificaciones)</li>
+</ul>
+<p><strong>La suma de todos los grupos + MAUS = factura Blip exacta (diff &lt;$2 por redondeo).</strong></p>
+
+<h3>Costo blended por mensaje (Seccion 4)</h3>
+<p>Para el desglose por campana se usa un costo blended = factura total Blip / templates DB. Incluye plataforma + fee WA. Es una aproximacion que cuadra con la factura (diff &lt;$7).</p>
+
+<h3>Asignacion de otros proveedores</h3>
+<ul>
+  <li><strong>Botmaker:</strong> 100% cobranza (verificado en DB &mdash; todas las etapas son cobranza)</li>
+  <li><strong>Voximplant:</strong> 100% cobranza (verificado en DB &mdash; solo campanas de cobranza)</li>
+  <li><strong>GHL:</strong> 100% cobranza (emails de cobranza)</li>
+  <li><strong>Mailgun:</strong> Distribuido proporcionalmente por area (19.3% cobranza, 29.4% comercial, 51.3% preadmision) &mdash; aproximacion, no por envio real</li>
+</ul>
+
+<h3>Denominadores</h3>
+<table>
+  <tr><th>Denominador</th><th>Fuente</th><th>Uso</th></tr>
+  <tr><td>Solicitudes</td><td><code>solicitud</code> filtrada por <code>created_at</code></td><td>Costo por solicitud (preadmision)</td></tr>
+  <tr><td>Morosos gestionados</td><td><code>moroso_historico</code> &mdash; solicitudes unicas</td><td>Costo por moroso (cobranza en mora)</td></tr>
+  <tr><td>Firmas retargeting</td><td><code>solicitud.status='aprobado'</code> con source retargeting</td><td>Costo por firma (comercial)</td></tr>
+</table>
+
+<h3>Cobranza: mora vs preventiva</h3>
+<p>La cobranza se divide en dos grupos:</p>
+<ul>
+  <li><strong>Mora:</strong> Mensajes a clientes con dpd &gt; 0. Incluye todos los proveedores (Blip, Botmaker, Voximplant, GHL). El denominador usa morosos gestionados de <code style="background:#ebeae3;padding:1px 5px;border-radius:3px;font-size:13px;">moroso_historico</code>.</li>
+  <li><strong>Preventiva:</strong> Mensajes antes del vencimiento (dpd &le; 0). Solo Blip WA. Sin denominador propio.</li>
+</ul>
+
+<h3>Tarifas por tipo Meta</h3>
+<table>
+  <tr><th>Tipo</th><th>Tarifa / conv</th><th>Fee Meta de</th></tr>
+  <tr><td><strong>MARKETING</strong></td><td>$0.0803</td><td>Blip</td></tr>
+  <tr><td><strong>UTILITY</strong></td><td>$0.03</td><td>Blip</td></tr>
+  <tr><td><strong>AUTHENTICATION</strong></td><td>$0.03</td><td>Blip</td></tr>
+  <tr><td><strong>SERVICE (inbound)</strong></td><td>$0.00</td><td>Meta no cobra</td></tr>
+</table>
+
+<h3>Indicadores de prueba</h3>
+<p>Numeros con patron 999999xx y templates con source=test se marcan visualmente como prueba. Representan &lt;0.5% del volumen.</p>
+
+<h3>Verificaciones realizadas</h3>
+<ul>
+  <li>Suma de templates por numero = total DB por mes <strong>(diff = 0)</strong></li>
+  <li>Seccion 2: suma Blip cobranza + comercial + preadmision + MAUS = factura Blip <strong>(diff &lt; $2)</strong></li>
+  <li>Seccion 4: suma campanas &times; costo blended &asymp; factura Blip <strong>(diff &lt; $7)</strong></li>
+  <li>Phone&times;day de la DB &asymp; conversaciones facturadas <strong>(ratio 1.09 en abril)</strong></li>
+  <li>Costo plataforma + fee Meta por area suman exacto al total por area</li>
+  <li>Total reconstruido USD = Fijos + Transaccionales + Cobranza + Comercial + Llamadas + Otros = Seccion 1 <strong>(cuadra exacto)</strong></li>
+</ul>
+
+<h3>Limitaciones conocidas</h3>
+<ul>
+  <li>Mayo sin factura Blip (costo = $0 para WA)</li>
+  <li>Voximplant ene/feb/may = recargas, no consumo real desglosado</li>
+  <li>Kontactus ene/feb = estimados de CDR</li>
+  <li>Clasificacion de templates es automatica por nombre (5-9% &ldquo;sin clasificar&rdquo; en meses normales)</li>
+  <li>Mailgun distribuido proporcionalmente, no por envio real</li>
+  <li>Llamadas Voximplant API pueden tener ~10% faltante por rate limiting</li>
+  <li>Anomalia Services Voximplant: marzo probablemente fue trial, abril es tarifa real</li>
+</ul>
+
+<div class="footer">
+  Manual del Reporte Drivers de Gasto &middot; BaldeCash &middot; Mayo 2026
+</div>
+
+</div>
+</body>
+</html>

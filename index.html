@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drivers de gasto — mensajeria y voz</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 40px 32px;
+    min-height: 100vh;
+  }
+
+  /* -- Header -- */
+  .header {
+    padding-bottom: 20px;
+    border-bottom: 3px double #1a1a1a;
+    margin-bottom: 36px;
+  }
+  .header .kicker {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-style: italic;
+    font-size: 15px;
+    color: #666;
+  }
+
+  /* -- Section headings -- */
+  .section-num {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  .section-head {
+    font-size: 22px;
+    font-weight: 400;
+    color: #1a1a1a;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .section {
+    margin-bottom: 48px;
+  }
+  .subsection {
+    margin-top: 32px;
+  }
+  .subsection-title {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ececec;
+  }
+
+  /* -- Data tables -- */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .data-table th {
+    background: #ebeae3;
+    padding: 9px 12px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+  }
+  .data-table th.r { text-align: right; }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ececec;
+    color: #1a1a1a;
+  }
+  .data-table td.r { text-align: right; }
+  .data-table td.muted { color: #999; }
+  .data-table tr.subtotal td {
+    background: #f9f8f4;
+    font-weight: 700;
+    border-bottom: 1px solid #ddd;
+  }
+  .data-table tr.total-row td {
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 700;
+    border-bottom: none;
+  }
+  .data-table tr.highlight-row td {
+    background: #fef9e7;
+  }
+  .data-table tr.group-row td {
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .data-table tr.group-header td {
+    background: #ebeae3;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .tag-paused {
+    display: inline-block;
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #c62828;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .tag-check {
+    color: #2e7d32;
+    font-weight: 700;
+  }
+
+  /* -- Driver table (Section 2) -- */
+  .driver-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .driver-table th {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .driver-table th.r { text-align: right; }
+  .driver-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #ececec;
+    color: #1a1a1a;
+  }
+  .driver-table td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  .driver-table tr.area-header td {
+    background: #ebeae3;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #ddd;
+    padding-top: 14px;
+  }
+  .driver-table tr.driver-row td {
+    background: #fef9e7;
+    font-weight: 700;
+  }
+  .driver-table tr.spacer td {
+    border-bottom: none;
+    padding: 4px;
+  }
+  .driver-table tr td.indent {
+    padding-left: 28px;
+    color: #444;
+  }
+
+  /* -- Footnotes -- */
+  .footnote {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    padding: 10px 16px;
+    border-left: 2px solid #ddd;
+    margin: 16px 0;
+    line-height: 1.5;
+  }
+  .footnote.warn {
+    background: #fef9e7;
+    border-left-color: #c9a227;
+    color: #7a6c14;
+  }
+
+  /* -- Methodology -- */
+  .methodology {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+    background: #f9f8f4;
+    border: 1px solid #ebeae3;
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+  .methodology h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  .methodology ul {
+    margin: 0 0 0 18px;
+    padding: 0;
+  }
+  .methodology li {
+    margin-bottom: 6px;
+  }
+  .methodology code {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 11px;
+    background: #ebeae3;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* -- Footer -- */
+  .footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid #ececec;
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  /* -- Responsive -- */
+  @media (max-width: 760px) {
+    .page { padding: 24px 16px; }
+    .header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="kicker">Baldecash &middot; Reporte interno</div>
+    <h1>Drivers de gasto &mdash; mensajeria y voz</h1>
+    <div class="subtitle">Balde K S.A.C. &middot; Periodo Enero&ndash;Mayo 2026 &middot; USD + PEN</div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- RESUMEN EJECUTIVO                                                   -->
+  <!-- ================================================================== -->
+  <div class="subsection">
+    <div class="subsection-title">Volumen por plataforma</div>
+    <table class="data-table">
+      <thead>
+        <tr><th style="width:160px;">Plataforma</th><th>Metrica</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Blip</strong></td><td>Templates WA (DB)</td><td class="r">127,587</td><td class="r">88,325</td><td class="r">129,688</td><td class="r">148,828</td><td class="r">140,905</td></tr>
+        <tr><td><strong>Botmaker</strong></td><td>Sesiones WA (dashboard)</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td><strong>Voximplant</strong></td><td>Llamadas campanas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+        <tr><td><strong>Voximplant</strong></td><td>WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
+        <tr><td><strong>Kontactus</strong></td><td>Llamadas</td><td class="r">~6,200 *</td><td class="r">~26,900 *</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
+        <tr><td><strong>GoHighLevel</strong></td><td>Emails cobranza</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
+        <tr><td><strong>Mailgun</strong></td><td>Emails</td><td class="r">16,800</td><td class="r">21,300</td><td class="r">27,902</td><td class="r">&mdash;</td><td class="r">65,179</td></tr>
+        <tr><td><strong>Labs Mobile</strong></td><td>SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
+      </tbody>
+    </table>
+    <div class="footnote" style="margin-top:8px;">Botmaker muestra sesiones del dashboard (28,302 ene) que difiere de los logs DB (28,090 ene) usados en la Seccion 9 (Ficha por plantilla, 155,677 msgs). La diferencia (~212 ene, ~4,803 feb) son sesiones sin template HSM registrado. Los costos se calculan con los datos de factura, no con estos volumenes.</div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Gasto por plataforma (mes de actividad)</div>
+    <table class="data-table">
+      <thead>
+        <tr><th style="width:160px;">Plataforma</th><th>Moneda</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th><th class="r">Total</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Blip</strong></td><td>USD</td><td class="r">$6,011.58</td><td class="r">$5,999.75</td><td class="r">$8,788.95</td><td class="r">$11,146.44</td><td class="r">&mdash;</td><td class="r"><strong>$31,946.72</strong></td></tr>
+        <tr><td><strong>Botmaker</strong></td><td>USD</td><td class="r">$3,656.33</td><td class="r">$3,625.72</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r"><strong>$7,282.05</strong></td></tr>
+        <tr><td><strong>Voximplant</strong></td><td>USD</td><td class="r">$1,000 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$500 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r">$756.31</td><td class="r">$2,111.84</td><td class="r">$1,500 <span style="color:#999;font-size:10px;">rec.</span></td><td class="r"><strong>$5,868.15</strong></td></tr>
+        <tr><td><strong>GoHighLevel</strong></td><td>USD</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$100.07</td><td class="r">$115.86</td><td class="r"><strong>$215.93</strong></td></tr>
+        <tr><td><strong>Mailgun</strong></td><td>USD</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r"><strong>$175.00</strong></td></tr>
+        <tr><td><strong>Labs Mobile</strong></td><td>PEN</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">S/ 709</td><td class="r">S/ 990</td><td class="r">S/ 365</td><td class="r"><strong>S/ 2,064</strong></td></tr>
+        <tr><td><strong>Kontactus</strong></td><td>PEN</td><td class="r">S/ 1,452</td><td class="r">S/ 1,512</td><td class="r">S/ 1,513</td><td class="r">S/ 1,770</td><td class="r">S/ 1,716</td><td class="r"><strong>S/ 7,963</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="footnote">Costos asignados al mes de actividad, no al de facturacion (1 mes de desfase en Blip y Botmaker). Voximplant ene/feb/may = recargas; mar/abr = consumo real.</div>
+  </div>
+
+  <!-- Graficos de barras -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:36px;">
+    <div style="background:#f9f8f4;border-radius:8px;padding:20px;">
+      <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:12px;">Volumen por plataforma (Ene&ndash;Abr)</div>
+      <div style="position:relative;height:280px;"><canvas id="volPlatBarChart"></canvas></div>
+    </div>
+    <div style="background:#f9f8f4;border-radius:8px;padding:20px;">
+      <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:12px;">Gasto USD por plataforma (Ene&ndash;Abr)</div>
+      <div style="position:relative;height:280px;"><canvas id="gastoPlatBarChart"></canvas></div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 1: FACTURADO POR CONCEPTO                                  -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-facturado">
+    <div class="section-num">1</div>
+    <h2 class="section-head">Facturado por concepto</h2>
+    <div class="section-desc">Desglose de cada linea de facturacion por proveedor &middot; Enero&ndash;Abril 2026 &middot; USD y PEN<br>
+    <span style="font-size:11px;">Facturas asignadas al mes de actividad, no al mes de emision.</span></div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Proveedor</th><th>Concepto</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th></tr>
+      </thead>
+      <tbody>
+
+        <!-- Blip -->
+        <tr class="group-header"><td colspan="7">Blip (USD) &mdash; asignado al mes de actividad</td></tr>
+        <tr><td></td><td>MAUS Monthly Fee ($600 fijo)</td><td class="r">$600.00</td><td class="r">$600.00</td><td class="r">$600.00</td><td class="r">$600.00</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Additional Automated Conversations &times; $0.0070</td>
+          <td class="r">$1,092.83 <span style="color:#999;font-size:10px;">#156,118</span></td>
+          <td class="r">$1,040.74 <span style="color:#999;font-size:10px;">#148,677</span></td>
+          <td class="r">$1,864.63 <span style="color:#999;font-size:10px;">#266,375</span></td>
+          <td class="r">$2,271.28 <span style="color:#999;font-size:10px;">#324,468</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td></td><td>WA Marketing Conversations &times; $0.0803</td>
+          <td class="r">$4,315.72 <span style="color:#999;font-size:10px;">#53,745</span></td>
+          <td class="r">$4,350.01 <span style="color:#999;font-size:10px;">#54,172</span></td>
+          <td class="r">$6,306.92 <span style="color:#999;font-size:10px;">#78,542</span></td>
+          <td class="r">$8,142.90 <span style="color:#999;font-size:10px;">#101,406</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td></td><td>WA Utility Conversations &times; $0.0300</td>
+          <td class="r">&mdash;</td>
+          <td class="r">$0.06 <span style="color:#999;font-size:10px;">#2</span></td>
+          <td class="r">$1.26 <span style="color:#999;font-size:10px;">#42</span></td>
+          <td class="r">$73.62 <span style="color:#999;font-size:10px;">#2,454</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td></td><td>WA Authentication Conversations &times; $0.03</td>
+          <td class="r">$3.03 <span style="color:#999;font-size:10px;">#101</span></td>
+          <td class="r">$8.94 <span style="color:#999;font-size:10px;">#298</span></td>
+          <td class="r">$16.14 <span style="color:#999;font-size:10px;">#538</span></td>
+          <td class="r">$58.64 <span style="color:#999;font-size:10px;">#1,981</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td></td><td><strong>Subtotal Blip</strong></td>
+          <td class="r"><strong>$6,011.58</strong></td>
+          <td class="r"><strong>$5,999.75</strong></td>
+          <td class="r"><strong>$8,788.95</strong></td>
+          <td class="r"><strong>$11,146.44</strong> <span class="tag-check">&#x2713;</span></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <!-- Verificacion Abril -->
+        <tr><td colspan="7" style="font-size:11px;color:#666;padding:6px 12px;background:#fafaf6;">
+          <strong>Verificacion Abril:</strong> $600.00 + $2,271.28 + $8,142.90 + $73.62 + $58.64 = <strong>$11,146.44</strong> <span class="tag-check">&#x2713;</span>
+        </td></tr>
+
+        <!-- Conversaciones vs Mensajes -->
+        <tr><td colspan="7" style="padding:0;">
+          <div style="background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:16px 18px;margin:16px 0;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:12px;color:#555;line-height:1.7;">
+            <strong style="color:#1a1a1a;">Conversaciones (factura) vs mensajes (DB)</strong><br>
+            Meta cobra por <em>conversacion</em> (ventana de 24hrs), no por mensaje individual. Si se envian 3 templates al mismo cliente en un dia, cuenta como 1 conversacion. Por eso la factura muestra menos unidades que la DB.<br><br>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+              <tr style="border-bottom:1px solid #ddd;">
+                <td style="padding:4px 8px;font-weight:600;color:#1a1a1a;">Metrica</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">Ene</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">Feb</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">Mar</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">Abr</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:4px 8px;">Conv. MKT (factura Blip)</td>
+                <td style="padding:4px 8px;text-align:right;">53,745</td>
+                <td style="padding:4px 8px;text-align:right;">54,172</td>
+                <td style="padding:4px 8px;text-align:right;">78,542</td>
+                <td style="padding:4px 8px;text-align:right;">101,406</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:4px 8px;">Templates enviados (DB)</td>
+                <td style="padding:4px 8px;text-align:right;">127,587</td>
+                <td style="padding:4px 8px;text-align:right;">88,325</td>
+                <td style="padding:4px 8px;text-align:right;">129,688</td>
+                <td style="padding:4px 8px;text-align:right;">148,828</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:4px 8px;">Ratio msgs / conv</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">2.37</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">1.63</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">1.65</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">1.47</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:4px 8px;">Costo / conversacion MKT</td>
+                <td style="padding:4px 8px;text-align:right;">$0.0803</td>
+                <td style="padding:4px 8px;text-align:right;">$0.0803</td>
+                <td style="padding:4px 8px;text-align:right;">$0.0803</td>
+                <td style="padding:4px 8px;text-align:right;">$0.0803</td>
+              </tr>
+              <tr style="background:#fef9e7;">
+                <td style="padding:4px 8px;font-weight:600;">Costo efectivo / mensaje</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">$0.034</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">$0.049</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">$0.049</td>
+                <td style="padding:4px 8px;text-align:right;font-weight:600;">$0.055</td>
+              </tr>
+            </table>
+            <div style="margin-top:8px;font-size:11px;color:#888;">
+              Costo efectivo / mensaje = costo MKT factura / templates DB. En enero cada mensaje costaba $0.034 porque se enviaban ~2.4 msgs por conversacion. En abril bajo a 1.47 msgs/conv → $0.055/msg. A medida que se consolidan menos mensajes por ventana, el costo por mensaje sube.
+            </div>
+          </div>
+        </td></tr>
+
+        <!-- Breakdown por tipo Meta -->
+        <tr><td colspan="7" style="padding:0;">
+          <div style="background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:16px 18px;margin:16px 0;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:12px;color:#555;line-height:1.7;">
+            <strong style="color:#1a1a1a;">Costo Blip por tipo de plantilla Meta</strong><br><br>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <tr style="border-bottom:2px solid #ddd;">
+                <td style="padding:6px 8px;font-weight:600;color:#1a1a1a;">Tipo Meta</td>
+                <td style="padding:6px 8px;font-weight:600;color:#1a1a1a;">Tarifa/conv</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">Ene</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">Feb</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">Mar</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">Abr</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:6px 8px;"><span style="background:#c62828;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;">MARKETING</span></td>
+                <td style="padding:6px 8px;">$0.0803</td>
+                <td style="padding:6px 8px;text-align:right;">127,496 msgs<br><strong>$4,315.72</strong><br><span style="color:#999;">53,745 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">87,664 msgs<br><strong>$4,350.01</strong><br><span style="color:#999;">54,172 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">128,112 msgs<br><strong>$6,306.92</strong><br><span style="color:#999;">78,542 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">143,279 msgs<br><strong>$8,142.90</strong><br><span style="color:#999;">101,406 conv</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:6px 8px;"><span style="background:#2e7d32;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;">UTILITY</span></td>
+                <td style="padding:6px 8px;">$0.03</td>
+                <td style="padding:6px 8px;text-align:right;">0 msgs<br><strong>$0.00</strong></td>
+                <td style="padding:6px 8px;text-align:right;">349 msgs<br><strong>$0.06</strong><br><span style="color:#999;">2 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">1,019 msgs<br><strong>$1.26</strong><br><span style="color:#999;">42 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">3,564 msgs<br><strong>$73.62</strong><br><span style="color:#999;">2,454 conv</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #ececec;">
+                <td style="padding:6px 8px;"><span style="background:#1565c0;color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;">AUTHENTICATION</span></td>
+                <td style="padding:6px 8px;">$0.03</td>
+                <td style="padding:6px 8px;text-align:right;">91 msgs<br><strong>$3.03</strong><br><span style="color:#999;">101 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">312 msgs<br><strong>$8.94</strong><br><span style="color:#999;">298 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">557 msgs<br><strong>$16.14</strong><br><span style="color:#999;">538 conv</span></td>
+                <td style="padding:6px 8px;text-align:right;">1,985 msgs<br><strong>$58.64</strong><br><span style="color:#999;">1,981 conv</span></td>
+              </tr>
+              <tr style="background:#fef9e7;">
+                <td style="padding:6px 8px;font-weight:600;" colspan="2">Total fee WA</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$4,318.75</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$4,359.01</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$6,324.32</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$8,275.16</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 8px;font-weight:600;" colspan="2">Costo efectivo / msg DB</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$0.034</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$0.049</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$0.049</td>
+                <td style="padding:6px 8px;text-align:right;font-weight:600;">$0.056</td>
+              </tr>
+            </table>
+            <div style="margin-top:10px;font-size:11px;color:#888;">
+              El 96-99% de los mensajes son MARKETING ($0.0803/conv). UTILITY solo creci&oacute; en abril (locker truck, school rental). Recategorizar plantillas transaccionales (confirmaci&oacute;n solicitud, firma contrato) de MKT a UTIL reducir&iacute;a el fee de $0.0803 a $0.03/conv (ahorro 63%).
+            </div>
+          </div>
+        </td></tr>
+
+        <!-- Botmaker -->
+        <tr class="group-header"><td colspan="7">Botmaker (USD) &mdash; pausada desde mar 2026</td></tr>
+        <tr><td></td><td>Plan Botmaker Plataforma</td><td class="r">$249.00</td><td class="r">$249.00</td><td class="r">$249.00</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Usuarios diarios adicionales</td>
+          <td class="r">$1,654.59 <span style="color:#999;font-size:10px;">#43,118</span></td>
+          <td class="r">$1,250.97 <span style="color:#999;font-size:10px;">#37,685</span></td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Lineas adicionales de WhatsApp</td><td class="r">$50.00</td><td class="r">$50.00</td><td class="r">$50.00</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Conv. marketing WA (empresa)</td>
+          <td class="r">$1,525.99 <span style="color:#999;font-size:10px;">#17,230</span></td>
+          <td class="r">$2,068.62 <span style="color:#999;font-size:10px;">#23,375</span></td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Conv. utility WA (empresa)</td>
+          <td class="r">$162.14 <span style="color:#999;font-size:10px;">#6,434</span></td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Conv. WA iniciadas por usuarios</td>
+          <td class="r">$4.78 <span style="color:#999;font-size:10px;">#1,019</span></td>
+          <td class="r">$4.57 <span style="color:#999;font-size:10px;">#981</span></td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>AI Agents + Productivity AI + GenAI tokens</td><td class="r">$8.93</td><td class="r">$2.32</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td></td><td>Cargos admin GenAI</td><td class="r">$0.90</td><td class="r">$0.24</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td></td><td><strong>Subtotal Botmaker</strong></td>
+          <td class="r"><strong>$3,656.33</strong></td>
+          <td class="r"><strong>$3,625.72</strong></td>
+          <td class="r"><strong>&mdash;</strong></td>
+          <td class="r"><strong>&mdash;</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <!-- Voximplant -->
+        <tr class="group-header"><td colspan="7">Voximplant (USD) &mdash; prepago / consumo real</td></tr>
+        <tr><td></td><td>Voximplant Kit package</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$300.00</td><td class="r">$600.00</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Services (incl. WA HSM)</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$101.99</td><td class="r">$1,046.32</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Outbound PSTN Calls</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$207.89</td><td class="r">$282.11</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Voicemail detection</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$107.16</td><td class="r">$142.07</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Speech synthesis</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$19.44</td><td class="r">$25.51</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Phone numbers</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$10.84</td><td class="r">$8.00</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Inbound PSTN Calls</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$5.65</td><td class="r">$5.00</td><td class="r">[ ]</td></tr>
+        <tr><td></td><td>Call recording</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$3.35</td><td class="r">$2.84</td><td class="r">[ ]</td></tr>
+        <tr class="subtotal"><td></td><td><strong>Subtotal Voximplant consumo</strong></td>
+          <td class="r"><strong>$1,000</strong> <span style="color:#999;font-size:10px;">recarga</span></td>
+          <td class="r"><strong>$500</strong> <span style="color:#999;font-size:10px;">recarga</span></td>
+          <td class="r"><strong>$756.31</strong></td>
+          <td class="r"><strong>$2,111.84</strong></td>
+          <td class="r"><strong>$1,500</strong> <span style="color:#999;font-size:10px;">recarga</span></td></tr>
+
+        <!-- GoHighLevel -->
+        <tr class="group-header"><td colspan="7">GoHighLevel (USD)</td></tr>
+        <tr><td></td><td>Suscripcion ($97/mes)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$97.00</td><td class="r">$97.00</td></tr>
+        <tr><td></td><td>Email MKT wallet</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$3.07</td><td class="r">$18.86</td></tr>
+        <tr class="subtotal"><td></td><td><strong>Subtotal GHL</strong></td><td class="r"><strong>&mdash;</strong></td><td class="r"><strong>&mdash;</strong></td><td class="r"><strong>&mdash;</strong></td><td class="r"><strong>$100.07</strong></td><td class="r"><strong>$115.86</strong></td></tr>
+
+        <!-- Mailgun -->
+        <tr class="group-header"><td colspan="7">Mailgun (USD)</td></tr>
+        <tr><td></td><td>Foundation 50k</td><td class="r">$35.00</td><td class="r">$35.00</td><td class="r">$35.00</td><td class="r">$35.00</td><td class="r">$35.00</td></tr>
+
+        <!-- Total USD -->
+        <tr class="total-row"><td colspan="2"><strong>Total USD</strong></td>
+          <td class="r"><strong>$10,702.91</strong></td>
+          <td class="r"><strong>$10,160.47</strong></td>
+          <td class="r"><strong>$9,580.26</strong></td>
+          <td class="r"><strong>$13,393.35</strong></td>
+          <td class="r"><strong>$1,650.86</strong> *</td></tr>
+
+        <!-- Labs Mobile -->
+        <tr class="group-header"><td colspan="7">Labs Mobile (PEN)</td></tr>
+        <tr><td></td><td>Creditos prepago SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">S/ 709.23</td><td class="r">S/ 990.14</td><td class="r">S/ 364.79</td></tr>
+
+        <!-- Kontactus -->
+        <tr class="group-header"><td colspan="7">Kontactus (PEN)</td></tr>
+        <tr><td></td><td>Servicio mensual</td><td class="r">S/ 1,452.20</td><td class="r">S/ 1,511.65</td><td class="r">S/ 1,513.00</td><td class="r">S/ 1,769.71</td><td class="r">S/ 1,716.16</td></tr>
+
+        <!-- Total PEN -->
+        <tr class="total-row"><td colspan="2"><strong>Total PEN</strong></td>
+          <td class="r"><strong>S/ 1,452.20</strong></td>
+          <td class="r"><strong>S/ 1,511.65</strong></td>
+          <td class="r"><strong>S/ 2,222.23</strong></td>
+          <td class="r"><strong>S/ 2,759.85</strong></td>
+          <td class="r"><strong>S/ 2,080.95</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="footnote warn">
+      <strong>(*) Mayo:</strong> Falta factura de Blip (actividad mayo). El total USD solo incluye Voximplant recarga ($1,500) + GHL ($115.86) + Mailgun ($35).<br>
+      <strong>[ ]</strong> = dato pendiente (sin factura detallada para ese mes).
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 2: COSTO POR USO DE NEGOCIO                                -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-drivers">
+    <div class="section-num">2</div>
+    <h2 class="section-head">Costo por uso de negocio</h2>
+    <div class="section-desc">Gasto facturado reasignado por uso de negocio &middot; Enero&ndash;Abril 2026<br>
+    <span style="font-size:11px;">Estructura: Cantidad de mensajes &rarr; Costo plataforma (Automated proporcional) &rarr; Fee Meta (MKT/UTIL/AUTH proporcional) &rarr; Total &rarr; Denominador &rarr; Costo unitario.<br>MAUS $600 queda en FIJOS. Automated se distribuye por phone&times;day. Conv MKT se distribuyen por phone&times;day. UTIL/AUTH directo a preadmision. Suma grupos + FIJOS = factura exacta.</span></div>
+
+    <table class="driver-table">
+      <thead>
+        <tr>
+          <th style="width:300px;">Uso de negocio</th>
+          <th class="r">Ene</th>
+          <th class="r">Feb</th>
+          <th class="r">Mar</th>
+          <th class="r">Abr</th>
+          <th class="r">May</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ============================================================ -->
+        <!-- FIJOS                                                         -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Fijos</td></tr>
+        <tr><td class="indent">Plan Botmaker Plataforma</td><td class="r">$249</td><td class="r">$249</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Lineas adicionales WA (Botmaker)</td><td class="r">$50</td><td class="r">$50</td><td class="r">$50</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">MAUS Monthly Fee (Blip)</td><td class="r">$600</td><td class="r">$600</td><td class="r">$600</td><td class="r">$600</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Voximplant Kit + Phone numbers</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$310.84</td><td class="r">$608</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">GoHighLevel suscripcion</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$97</td><td class="r">$97</td></tr>
+        <tr><td class="indent">Mailgun Foundation 50k</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Subtotal fijos</strong></td>
+          <td class="r"><strong>$934</strong></td>
+          <td class="r"><strong>$934</strong></td>
+          <td class="r"><strong>$995.84</strong></td>
+          <td class="r"><strong>$1,340</strong></td>
+          <td class="r"><strong>$132</strong></td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- TRANSACCIONALES (PREADMISION)                    -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Transaccionales (preadmision)</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Cantidad de mensajes</td>
+          <td class="r">2,427</td><td class="r">4,370</td><td class="r">7,741</td><td class="r">18,241</td><td class="r">11,045</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Numeros destino</td>
+          <td class="r" style="color:#999;font-size:11px;">1,522 <span style="font-size:10px;">(8.9%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">2,811 <span style="font-size:10px;">(17.1%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">4,811 <span style="font-size:10px;">(23.7%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">8,446 <span style="font-size:10px;">(29.8%)</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Msgs / numero</td>
+          <td class="r" style="color:#999;font-size:11px;">1.6</td>
+          <td class="r" style="color:#999;font-size:11px;">1.6</td>
+          <td class="r" style="color:#999;font-size:11px;">1.6</td>
+          <td class="r" style="color:#999;font-size:11px;">2.2</td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Costo plataforma <span style="color:#999;font-size:10px;">Automated $0.007 proporcional por phone&times;day</span></td>
+          <td class="r">$22</td><td class="r">$45</td><td class="r">$108</td><td class="r">$256</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;= 2.0% / 4.3% / 5.8% / 11.3% &times; Automated Conv de factura</td><td colspan="5"></td></tr>
+        <tr><td class="indent">Fee Meta <span style="color:#999;font-size:10px;">MKT conv proporcional + UTIL + AUTH directo</span></td>
+          <td class="r">$91</td><td class="r">$198</td><td class="r">$383</td><td class="r">$1,051</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Abr: 11,430 MKT&times;$0.0803=$918 + 2,454 UTIL&times;$0.03=$74 + 1,981 AUTH&times;$0.03=$59</td><td colspan="5"></td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total transaccionales</strong></td>
+          <td class="r"><strong>$113</strong></td>
+          <td class="r"><strong>$243</strong></td>
+          <td class="r"><strong>$491</strong></td>
+          <td class="r"><strong>$1,307</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Denominador: solicitudes del mes</td>
+          <td class="r" style="color:#666;">2,081</td>
+          <td class="r" style="color:#666;">3,140</td>
+          <td class="r" style="color:#666;">5,157</td>
+          <td class="r" style="color:#666;">8,570</td>
+          <td class="r" style="color:#666;">4,419</td></tr>
+        <tr class="driver-row"><td>&nbsp;&nbsp;&#9654; Costo unitario (USD / solicitud)</td>
+          <td class="r"><strong>$0.054</strong></td>
+          <td class="r"><strong>$0.077</strong></td>
+          <td class="r"><strong>$0.095</strong></td>
+          <td class="r"><strong>$0.153</strong></td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- COBRANZA EN MORA                                 -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Cobranza en mora</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Cantidad de mensajes (WA only, sin llamadas ni preventivos)</td>
+          <td class="r">120,650</td><td class="r">84,441</td><td class="r">122,082</td><td class="r">112,284</td><td class="r">83,096</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Numeros destino Blip mora</td>
+          <td class="r" style="color:#999;font-size:11px;">7,323 <span style="font-size:10px;">(42.6%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">4,760 <span style="font-size:10px;">(28.9%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">4,969 <span style="font-size:10px;">(24.4%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">4,921 <span style="font-size:10px;">(17.4%)</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Msgs / numero (Blip mora)</td>
+          <td class="r" style="color:#999;font-size:11px;">12.6</td>
+          <td class="r" style="color:#999;font-size:11px;">13.3</td>
+          <td class="r" style="color:#999;font-size:11px;">15.3</td>
+          <td class="r" style="color:#999;font-size:11px;">15.2</td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Ene: Blip mora 92,348 + Botmaker 28,302</td><td colspan="5"></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Feb: Blip mora 63,086 + Botmaker 19,696 + Vox HSM 1,659</td><td colspan="5"></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Mar: Blip mora 75,967 + Vox HSM 46,115</td><td colspan="5"></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Abr: Blip mora 74,934 + Vox HSM 37,350</td><td colspan="5"></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;May: Blip mora 62,512 + Vox HSM 20,584</td><td colspan="5"></td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Costo por proveedor</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Blip plataforma <span style="color:#999;font-size:10px;">Automated proporcional (solo mora)</span></td>
+          <td class="r">$790</td><td class="r">$755</td><td class="r">$1,172</td><td class="r">$1,231</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Blip fee Meta <span style="color:#999;font-size:10px;">MKT conv proporcional (solo mora)</span></td>
+          <td class="r">$3,119</td><td class="r">$3,155</td><td class="r">$3,965</td><td class="r">$4,413</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Botmaker WA <span class="tag-check">&#x2713;</span> 100% cobr.</td>
+          <td class="r">$1,693</td><td class="r">$2,073</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Voximplant <span class="tag-check">&#x2713;</span> 100% cobr.</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$756</td><td class="r">$2,112</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;GHL wallet <span class="tag-check">&#x2713;</span> 100% cobr.</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$3</td><td class="r">$19</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total cobranza en mora</strong></td>
+          <td class="r"><strong>$5,602</strong></td>
+          <td class="r"><strong>$5,983</strong></td>
+          <td class="r"><strong>$5,893</strong></td>
+          <td class="r"><strong>$7,759</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Denominador: morosos gestionados (solicitudes unicas, moroso_historico)</td>
+          <td class="r" style="color:#666;">4,523</td>
+          <td class="r" style="color:#666;">4,723</td>
+          <td class="r" style="color:#666;">4,950</td>
+          <td class="r" style="color:#666;">4,802</td>
+          <td class="r" style="color:#999;font-style:italic;">pend.</td></tr>
+        <tr class="driver-row"><td>&nbsp;&nbsp;&#9654; Costo unitario (USD / moroso gestionado)</td>
+          <td class="r"><strong>$1.24</strong></td>
+          <td class="r"><strong>$1.27</strong></td>
+          <td class="r"><strong>$1.19</strong></td>
+          <td class="r"><strong>$1.62</strong></td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- COBRANZA PREVENTIVA                              -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Cobranza preventiva (preventivos + recordatorios)</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Cantidad de mensajes Blip</td>
+          <td class="r">30,896</td><td class="r">16,588</td><td class="r">17,030</td><td class="r">20,208</td><td class="r">20,020</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Numeros destino</td>
+          <td class="r" style="color:#999;font-size:11px;">7,430 <span style="font-size:10px;">(43.3%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">6,537 <span style="font-size:10px;">(39.7%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">5,812 <span style="font-size:10px;">(28.6%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">6,453 <span style="font-size:10px;">(22.8%)</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Msgs / numero</td>
+          <td class="r" style="color:#999;font-size:11px;">4.2</td>
+          <td class="r" style="color:#999;font-size:11px;">2.5</td>
+          <td class="r" style="color:#999;font-size:11px;">2.9</td>
+          <td class="r" style="color:#999;font-size:11px;">3.8</td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Costo plataforma <span style="color:#999;font-size:10px;">Automated proporcional</span></td>
+          <td class="r">$264</td><td class="r">$198</td><td class="r">$263</td><td class="r">$332</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Fee Meta <span style="color:#999;font-size:10px;">MKT conv proporcional</span></td>
+          <td class="r">$1,043</td><td class="r">$829</td><td class="r">$889</td><td class="r">$1,190</td><td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total cobranza preventiva</strong></td>
+          <td class="r"><strong>$1,307</strong></td>
+          <td class="r"><strong>$1,027</strong></td>
+          <td class="r"><strong>$1,152</strong></td>
+          <td class="r"><strong>$1,522</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Incluye: preventivos por riesgo, recordatorio_grupo_ab, recordatorio_abril_vigente</td><td colspan="5"></td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- RETARGETING                                      -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Comercial (retargeting + entrega + otros)</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Cantidad de mensajes</td>
+          <td class="r">1,916</td><td class="r">4,281</td><td class="r">28,950</td><td class="r">35,445</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Numeros destino</td>
+          <td class="r" style="color:#999;font-size:11px;">425 <span style="font-size:10px;">(2.5%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">1,580 <span style="font-size:10px;">(9.6%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">3,440 <span style="font-size:10px;">(16.9%)</span></td>
+          <td class="r" style="color:#999;font-size:11px;">5,318 <span style="font-size:10px;">(18.8%)</span></td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Msgs / numero</td>
+          <td class="r" style="color:#999;font-size:11px;">1.1</td>
+          <td class="r" style="color:#999;font-size:11px;">1.4</td>
+          <td class="r" style="color:#999;font-size:11px;">7.0</td>
+          <td class="r" style="color:#999;font-size:11px;">4.6</td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Costo plataforma <span style="color:#999;font-size:10px;">Automated $0.007 proporcional por phone&times;day</span></td>
+          <td class="r">$17</td><td class="r">$42</td><td class="r">$321</td><td class="r">$452</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Fee Meta <span style="color:#999;font-size:10px;">MKT conv proporcional por phone&times;day</span></td>
+          <td class="r">$66</td><td class="r">$177</td><td class="r">$1,087</td><td class="r">$1,622</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Abr: 20,202 MKT conv&times;$0.0803=$1,622 + Auto $452</td><td colspan="5"></td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total comercial</strong></td>
+          <td class="r"><strong>$82</strong></td>
+          <td class="r"><strong>$219</strong></td>
+          <td class="r"><strong>$1,408</strong></td>
+          <td class="r"><strong>$2,075</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Denominador: firmas retargeting (aprobados)</td>
+          <td class="r" style="color:#666;">36</td>
+          <td class="r" style="color:#666;">16</td>
+          <td class="r" style="color:#666;">42</td>
+          <td class="r" style="color:#666;">46</td>
+          <td class="r" style="color:#666;">20</td></tr>
+        <tr class="driver-row"><td>&nbsp;&nbsp;&#9654; Costo unitario (USD / firma)</td>
+          <td class="r"><strong>$2.29</strong></td>
+          <td class="r"><strong>$13.72</strong></td>
+          <td class="r"><strong>$33.53</strong></td>
+          <td class="r"><strong>$45.10</strong></td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- ENTREGA / OPS                                    -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Entrega / Ops</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Blip WA (Marketing)</td>
+          <td class="r">184</td><td class="r">1,026</td><td class="r">2,217</td><td class="r">9,926</td><td class="r">11,373</td></tr>
+        <tr><td class="indent">Fee Meta &times; $0.0703</td>
+          <td class="r">$13</td><td class="r">$72</td><td class="r">$156</td><td class="r">$698</td><td class="r">$799</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- SALIENTES -- OTROS WA                                         -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Salientes &mdash; Otros WA</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Blip WA (Marketing)</td>
+          <td class="r">1,456</td><td class="r">2,014</td><td class="r">5,015</td><td class="r">6,213</td><td class="r">16,708</td></tr>
+        <tr><td class="indent">Fee Meta &times; $0.0703</td>
+          <td class="r">$102</td><td class="r">$142</td><td class="r">$353</td><td class="r">$437</td><td class="r">$1,175</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- LLAMADAS                                                      -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Llamadas</td></tr>
+        <tr><td class="indent">Outbound PSTN (Voximplant)</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$207.89</td><td class="r">$282.11</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">Voicemail detection + call recording</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$110.51</td><td class="r">$144.91</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">Speech synthesis</td><td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$19.44</td><td class="r">$25.51</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">Kontactus (PEN)</td><td class="r">S/ 1,452</td><td class="r">S/ 1,512</td><td class="r">S/ 1,513</td><td class="r">S/ 1,770</td><td class="r">S/ 1,716</td></tr>
+        <tr><td class="indent">Labs Mobile SMS (PEN)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">S/ 709</td><td class="r">S/ 990</td><td class="r">S/ 365</td></tr>
+        <tr><td class="indent">GHL email wallet</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$3.07</td><td class="r">$18.86</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Subtotal llamadas USD</strong></td>
+          <td class="r"><strong>[ ]</strong></td>
+          <td class="r"><strong>[ ]</strong></td>
+          <td class="r"><strong>$337.84</strong></td>
+          <td class="r"><strong>$452.53</strong></td>
+          <td class="r"><strong>[ ]</strong></td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Subtotal llamadas PEN</strong></td>
+          <td class="r"><strong>S/ 1,452</strong></td>
+          <td class="r"><strong>S/ 1,512</strong></td>
+          <td class="r"><strong>S/ 2,222</strong></td>
+          <td class="r"><strong>S/ 2,760</strong></td>
+          <td class="r"><strong>S/ 2,081</strong></td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- OTROS                                                         -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="6">Otros (no atribuibles a un mensaje)</td></tr>
+        <tr><td class="indent">AI Agents / Productivity / GenAI tokens (Botmaker)</td><td class="r">$8.93</td><td class="r">$2.32</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Usuarios diarios adicionales (Botmaker)</td><td class="r">$1,655</td><td class="r">$1,251</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Cargos admin GenAI (Botmaker)</td><td class="r">$0.90</td><td class="r">$0.24</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- COSTO VARIABLE POR USO DE NEGOCIO — consolidado               -->
+        <!-- ============================================================ -->
+        <tr class="group-row"><td colspan="6">Costo variable por uso de negocio &mdash; consolidado (datos reales de facturas)</td></tr>
+        <tr><td colspan="6" style="font-size:11px;color:#666;font-style:italic;padding:6px 14px;background:#f9f8f4;">
+          Blip: costo WA asignado proporcionalmente por volumen. Botmaker y Voximplant: 100% cobranza. Mayo sin factura Blip. Ene/Feb sin factura Vox.
+        </td></tr>
+
+        <tr class="area-header"><td colspan="6">Cobranza (todas las plataformas)</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total cobranza mora</strong></td>
+          <td class="r"><strong>$5,602</strong></td>
+          <td class="r"><strong>$5,983</strong></td>
+          <td class="r"><strong>$5,893</strong></td>
+          <td class="r"><strong>$7,759</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent">Blip plataforma (Auto proporcional mora)</td>
+          <td class="r">$790</td><td class="r">$755</td><td class="r">$1,172</td><td class="r">$1,231</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Blip fee Meta (MKT conv proporcional mora)</td>
+          <td class="r">$3,119</td><td class="r">$3,155</td><td class="r">$3,965</td><td class="r">$4,413</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Botmaker WA <span class="tag-check">&#x2713;</span> 100% cobr. DB</td>
+          <td class="r">$1,693</td><td class="r">$2,073</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">Voximplant <span class="tag-check">&#x2713;</span> 100% cobr. DB</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$756</td><td class="r">$2,112</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">GoHighLevel emails <span class="tag-check">&#x2713;</span> 100% cobr.</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$3.07</td><td class="r">$18.86</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <tr class="area-header"><td colspan="6">Comercial (retargeting + entrega + otros)</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total comercial</strong></td>
+          <td class="r"><strong>$82</strong></td>
+          <td class="r"><strong>$219</strong></td>
+          <td class="r"><strong>$1,408</strong></td>
+          <td class="r"><strong>$2,075</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Blip plataforma + fee Meta proporcional</td>
+          <td class="r" style="color:#999;font-size:11px;">1,916 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">4,281 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">28,950 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">35,445 msgs</td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <tr class="area-header"><td colspan="6">Preadmision (confirmaciones + firma)</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total preadmision</strong></td>
+          <td class="r"><strong>$113</strong></td>
+          <td class="r"><strong>$243</strong></td>
+          <td class="r"><strong>$491</strong></td>
+          <td class="r"><strong>$1,307</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">Blip plataforma + fee Meta proporcional</td>
+          <td class="r" style="color:#999;font-size:11px;">2,427 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">4,370 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">7,741 msgs</td>
+          <td class="r" style="color:#999;font-size:11px;">18,241 msgs</td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <tr class="subtotal"><td class="indent"><strong>Total costo variable WA+voz</strong></td>
+          <td class="r"><strong>$7,104</strong></td>
+          <td class="r"><strong>$7,472</strong></td>
+          <td class="r"><strong>$8,944</strong></td>
+          <td class="r"><strong>$12,663</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- LLAMADAS — Cobranza (dialer)                                  -->
+        <!-- ============================================================ -->
+        <tr class="group-row"><td colspan="6">Llamadas &mdash; Cobranza (dialer)</td></tr>
+        <tr><td class="indent">Voximplant campaigns</td>
+          <td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+        <tr><td class="indent">Kontactus CDR</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- INBOUND                                                       -->
+        <!-- ============================================================ -->
+        <tr class="group-row"><td colspan="6">Inbound (fee Meta = $0 &mdash; service conversations gratis)</td></tr>
+        <tr><td class="indent" style="font-style:italic;color:#666;">Volumen entrante</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Blip WA msgs recibidos</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">53,785</td><td class="r">67,403</td><td class="r">48,801</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Blip contactos interactuaron</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,530</td><td class="r">13,221</td><td class="r">8,379</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Voximplant llamadas entrantes PSTN</td>
+          <td class="r">29</td><td class="r">451</td><td class="r">451</td><td class="r">451</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Voximplant chats WA entrantes</td>
+          <td class="r">0</td><td class="r">1,096</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Botmaker conv. iniciadas por usuarios</td>
+          <td class="r">1,019</td><td class="r">981</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Mailgun emails</td>
+          <td class="r">16,800</td><td class="r">21,300</td><td class="r">27,902</td><td class="r">&mdash;</td><td class="r">65,179 <span style="color:#999;font-size:10px;">(30d)</span></td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Costo plataforma inbound (fee Meta = $0)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Blip Automated proporcional <span style="color:#999;font-size:10px;">18.8% de Automated</span></td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$350</td><td class="r">$427</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;= msgs recibidos / total intercambiados &times; Automated factura</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Voximplant Inbound PSTN</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$5.65</td><td class="r">$5.00</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Botmaker conv. usuarios</td>
+          <td class="r">$4.78</td><td class="r">$4.57</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>Total costo inbound</strong></td>
+          <td class="r"><strong>$5</strong></td>
+          <td class="r"><strong>$5</strong></td>
+          <td class="r"><strong>$356</strong></td>
+          <td class="r"><strong>$432</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Costo / msg entrante Blip</td>
+          <td class="r" style="color:#999;font-size:11px;">&mdash;</td>
+          <td class="r" style="color:#999;font-size:11px;">&mdash;</td>
+          <td class="r" style="color:#999;font-size:11px;">$0.0065</td>
+          <td class="r" style="color:#999;font-size:11px;">$0.0063</td>
+          <td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Costo / llamada entrante Vox</td>
+          <td class="r" style="color:#999;font-size:11px;">[ ]</td>
+          <td class="r" style="color:#999;font-size:11px;">[ ]</td>
+          <td class="r" style="color:#999;font-size:11px;">$0.0125</td>
+          <td class="r" style="color:#999;font-size:11px;">$0.0111</td>
+          <td class="r">&mdash;</td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- RECONCILIACION                                                -->
+        <!-- ============================================================ -->
+        <tr class="group-row"><td colspan="6">Reconciliacion</td></tr>
+        <tr><td class="indent">Total facturado USD (Seccion 1)</td>
+          <td class="r">$10,703</td><td class="r">$10,160</td><td class="r">$9,580</td><td class="r">$13,393</td><td class="r">$1,651 *</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;del cual: fee WA (real, de facturas)</td>
+          <td class="r">$6,012</td><td class="r">$6,432</td><td class="r">$6,426</td><td class="r">$9,321</td><td class="r">$412</td></tr>
+        <tr class="highlight-row"><td class="indent">&nbsp;&nbsp;Residual (plataforma + voz + otros)</td>
+          <td class="r">$4,691</td><td class="r">$3,728</td><td class="r">$3,154</td><td class="r">$4,072</td><td class="r">$1,239</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Fee WA como % del facturado</td>
+          <td class="r">56.2%</td><td class="r">63.3%</td><td class="r">67.1%</td><td class="r">69.6%</td><td class="r" style="color:#999;font-style:italic;">n/a *</td></tr>
+        <tr><td class="indent">Total facturado PEN (Seccion 1)</td>
+          <td class="r">S/ 1,452</td><td class="r">S/ 1,512</td><td class="r">S/ 2,222</td><td class="r">S/ 2,760</td><td class="r">S/ 2,081</td></tr>
+
+        <tr><td colspan="6" style="font-size:11px;color:#666;font-style:italic;padding:8px 14px;background:#fafaf6;">
+          (*) Mayo: falta factura Blip.<br>
+          Nota desfase: facturas asignadas al mes de actividad.<br>
+          Interpretacion residual: enero alto por Botmaker, marzo bajo sin Botmaker, abril sube por Blip automated.<br>
+          Tarifas reales: Blip MKT $0.0803, UTIL $0.03, AUTH $0.03, Automated $0.007. Botmaker MKT ~$0.0884, UTIL ~$0.0252.
+        </td></tr>
+
+        <tr class="spacer"><td colspan="6"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- TOTAL RECONSTRUIDO — BREAKDOWN POR SERVICIO                   -->
+        <!-- ============================================================ -->
+        <tr class="group-row"><td colspan="6">Total reconstruido &mdash; cantidad &times; precio unitario = facturado</td></tr>
+        <tr><td colspan="6" style="font-size:11px;color:#666;font-style:italic;padding:8px 12px;">Cada linea muestra: unidades facturadas &times; tarifa contractual = monto. Comparar con mensajes reales (DB) para detectar si se paga de mas.</td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Blip (USD)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;MAUS fee (fijo)</td>
+          <td class="r">1 &times; $600</td><td class="r">1 &times; $600</td><td class="r">1 &times; $600</td><td class="r">1 &times; $600</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Automated Conv &times; $0.007</td>
+          <td class="r">156,118 = $1,093</td><td class="r">148,677 = $1,041</td><td class="r">266,375 = $1,865</td><td class="r">324,468 = $2,271</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA MKT conv &times; $0.0803</td>
+          <td class="r">53,745 = $4,316</td><td class="r">54,172 = $4,350</td><td class="r">78,542 = $6,307</td><td class="r">101,406 = $8,143</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA UTIL conv &times; $0.03</td>
+          <td class="r">&mdash;</td><td class="r">2 = $0.06</td><td class="r">42 = $1.26</td><td class="r">2,454 = $74</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA AUTH conv &times; $0.03</td>
+          <td class="r">101 = $3</td><td class="r">298 = $9</td><td class="r">538 = $16</td><td class="r">1,981 = $59</td><td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>&nbsp;&nbsp;Subtotal Blip</strong></td>
+          <td class="r"><strong>$6,012</strong></td><td class="r"><strong>$6,000</strong></td><td class="r"><strong>$8,789</strong></td><td class="r"><strong>$11,146</strong></td><td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Msgs DB enviados (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">127,587</td><td class="r" style="color:#999;font-size:11px;">88,325</td><td class="r" style="color:#999;font-size:11px;">129,688</td><td class="r" style="color:#999;font-size:11px;">148,828</td><td class="r" style="color:#999;font-size:11px;">140,905</td></tr>
+        <tr class="driver-row"><td class="indent">&nbsp;&nbsp;Ratio msgs DB / conv factura</td>
+          <td class="r"><strong>2.37</strong></td><td class="r"><strong>1.62</strong></td><td class="r"><strong>1.64</strong></td><td class="r"><strong>1.41</strong></td><td class="r">&mdash;</td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Botmaker (USD)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Plan + lineas (fijo)</td>
+          <td class="r">$299</td><td class="r">$299</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Usuarios diarios</td>
+          <td class="r">43,118 = $1,655</td><td class="r">37,685 = $1,251</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA MKT conv &times; $0.0886</td>
+          <td class="r">17,230 = $1,526</td><td class="r">23,375 = $2,069</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA UTIL conv &times; $0.0252</td>
+          <td class="r">6,434 = $162</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;WA Users conv &times; $0.0047</td>
+          <td class="r">1,019 = $5</td><td class="r">981 = $5</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;AI tokens + admin</td>
+          <td class="r">$10</td><td class="r">$3</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>&nbsp;&nbsp;Subtotal Botmaker</strong></td>
+          <td class="r"><strong>$3,656</strong></td><td class="r"><strong>$3,626</strong></td><td class="r"><strong>&mdash;</strong></td><td class="r"><strong>&mdash;</strong></td><td class="r"><strong>&mdash;</strong></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Logs DB (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">28,090</td><td class="r" style="color:#999;font-size:11px;">14,893</td><td class="r" style="color:#999;font-size:11px;">6,584</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Voximplant (USD)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Kit package (fijo)</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$300</td><td class="r">$600</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Phone numbers (fijo)</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$11</td><td class="r">$8</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Outbound PSTN &times; ~$0.003/call</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">63,798 = $208</td><td class="r">84,252 = $282</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Voicemail detection</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$107</td><td class="r">$142</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Speech synthesis</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$19</td><td class="r">$26</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Call recording + Inbound PSTN</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">$9</td><td class="r">$8</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Services (incl. WA HSM)</td>
+          <td class="r">[ ]</td><td class="r">[ ]</td><td class="r">46,115 msgs = $102</td><td class="r">37,350 msgs = $1,046</td><td class="r">[ ]</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;Costo/msg implícito</td>
+          <td class="r" style="color:#999;font-size:11px;">[ ]</td><td class="r" style="color:#999;font-size:11px;">[ ]</td>
+          <td class="r" style="color:#c62828;font-size:11px;font-weight:600;">$0.0022 ⚠</td>
+          <td class="r" style="color:#999;font-size:11px;">$0.0280</td><td class="r" style="color:#999;font-size:11px;">[ ]</td></tr>
+        <tr class="subtotal"><td class="indent"><strong>&nbsp;&nbsp;Subtotal Voximplant</strong></td>
+          <td class="r"><strong>$1,000</strong> <span style="color:#999;font-size:10px;">rec.</span></td>
+          <td class="r"><strong>$500</strong> <span style="color:#999;font-size:10px;">rec.</span></td>
+          <td class="r"><strong>$756</strong></td>
+          <td class="r"><strong>$2,112</strong></td>
+          <td class="r"><strong>$1,500</strong> <span style="color:#999;font-size:10px;">rec.</span></td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;WA HSM DB (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">1,659</td><td class="r" style="color:#999;font-size:11px;">46,115</td><td class="r" style="color:#999;font-size:11px;">37,350</td><td class="r" style="color:#999;font-size:11px;">20,584</td></tr>
+        <tr><td colspan="6" style="font-size:11px;color:#666;padding:8px 12px;background:#fef9e7;">
+          <strong>⚠ Anomalia Services:</strong> Marzo cobro $0.0022/msg (por debajo del fee Meta UTIL de $0.02). Abril cobro $0.028/msg (razonable: Meta $0.02 + margen). Posible causa: marzo fue periodo promocional/trial para WA HSM. Si abril es la tarifa real, marzo debio costar 46,115 &times; $0.028 = $1,291, no $102. Tambien el Kit package duplico de $300 a $600 (posible upgrade de plan). Confirmar con Voximplant si hubo cambio de plan o periodo de gracia.
+        </td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">GoHighLevel (USD)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Suscripcion (fijo)</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">$97</td><td class="r">$97</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Email wallet (variable)</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279 = $3</td><td class="r">11,467 = $19</td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">Mailgun (USD)</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Foundation 50k (fijo)</td>
+          <td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td><td class="r">$35</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Emails enviados (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">16,800</td><td class="r" style="color:#999;font-size:11px;">21,300</td><td class="r" style="color:#999;font-size:11px;">27,902</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">65,179</td></tr>
+
+        <tr class="total-row"><td colspan="2"><strong>TOTAL RECONSTRUIDO (USD)</strong></td>
+          <td class="r"><strong>$10,703</strong></td>
+          <td class="r"><strong>$10,160</strong></td>
+          <td class="r"><strong>$9,580</strong></td>
+          <td class="r"><strong>$13,393</strong></td>
+          <td class="r"><strong>$1,651</strong> *</td></tr>
+
+        <tr><td class="indent" style="font-style:italic;color:#666;">PEN &mdash; por proveedor</td><td colspan="5"></td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Kontactus &mdash; servicio mensual</td>
+          <td class="r">S/ 1,452</td><td class="r">S/ 1,512</td><td class="r">S/ 1,513</td><td class="r">S/ 1,770</td><td class="r">S/ 1,716</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;Llamadas (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">~6,200</td><td class="r" style="color:#999;font-size:11px;">~26,900</td><td class="r" style="color:#999;font-size:11px;">66,094</td><td class="r" style="color:#999;font-size:11px;">109,755</td><td class="r" style="color:#999;font-size:11px;">69,176</td></tr>
+        <tr><td class="indent">&nbsp;&nbsp;Labs Mobile &mdash; creditos prepago</td>
+          <td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">S/ 709</td><td class="r">S/ 990</td><td class="r">S/ 365</td></tr>
+        <tr><td class="indent" style="color:#999;font-size:11px;">&nbsp;&nbsp;SMS enviados (referencia)</td>
+          <td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">&mdash;</td><td class="r" style="color:#999;font-size:11px;">9,580</td><td class="r" style="color:#999;font-size:11px;">12,659</td><td class="r" style="color:#999;font-size:11px;">4,003</td></tr>
+        <tr class="total-row"><td colspan="2"><strong>TOTAL RECONSTRUIDO (PEN)</strong></td>
+          <td class="r"><strong>S/ 1,452</strong></td>
+          <td class="r"><strong>S/ 1,512</strong></td>
+          <td class="r"><strong>S/ 2,222</strong></td>
+          <td class="r"><strong>S/ 2,760</strong></td>
+          <td class="r"><strong>S/ 2,081</strong></td></tr>
+
+        <tr><td colspan="6" style="font-size:11px;color:#666;font-style:italic;padding:8px 12px;">
+          Verificacion: Total reconstruido USD = Fijos + Transaccionales + Cobranza en mora + Retargeting + Llamadas USD + Otros. Debe coincidir con Seccion 1.<br>
+          Ene: $934 + $103 + $8,576 + $81 + [ ] + $1,665 &asymp; $10,703 &nbsp;<span class="tag-check">&#x2713;</span><br>
+          Feb: $934 + $267 + $8,195 + $261 + [ ] + $1,254 &asymp; $10,160 &nbsp;<span class="tag-check">&#x2713;</span><br>
+          Mar: $996 + $489 + $6,628 + $1,828 + $338 &asymp; $9,580 &nbsp;<span class="tag-check">&#x2713;</span> (Otros = $0 desde mar)<br>
+          Abr: $1,340 + $1,293 + $8,853 + $2,512 + $453 &asymp; $13,393 &nbsp;<span class="tag-check">&#x2713;</span> (incl. GHL wallet $3.07 en llamadas)
+        </td></tr>
+
+      </tbody>
+    </table>
+
+    <div class="footnote warn">
+      <strong>(*) Mayo:</strong> Sin factura Blip, no se puede calcular costo unitario para transaccionales, cobranza y retargeting. Volumenes de mayo son al dia 26.<br>
+      <strong>[ ]</strong> = dato pendiente (sin factura detallada para ese mes).<br>
+      <strong>Nota:</strong> Botmaker "Usuarios diarios adicionales" aparece en Otros (fee de plataforma por volumen de contactos activos). El costo plataforma de cobranza en mora ya incluye este concepto en la linea Blip+Botmaker Automated, por lo que el total Otros no se suma dos veces en el total reconstruido.
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 3: VOLUMEN GLOBAL DE COMUNICACIONES                        -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-volumen">
+    <div class="section-num">3</div>
+    <h2 class="section-head">Volumen global de comunicaciones</h2>
+    <div class="section-desc">Total de mensajes, llamadas y emails enviados por todas las plataformas &middot; Enero&ndash;Mayo 2026</div>
+
+    <!-- Tabla por area -->
+    <div class="subsection">
+      <div class="subsection-title">Por area de negocio</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Area</th><th>Canal</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group-row"><td colspan="7">COBRANZA</td></tr>
+          <tr><td></td><td>Blip WA</td><td class="r">123,244</td><td class="r">79,674</td><td class="r">92,997</td><td class="r">95,142</td><td class="r">82,532</td></tr>
+          <tr><td></td><td>Botmaker WA</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+          <tr><td></td><td>Voximplant WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
+          <tr><td></td><td>Voximplant llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+          <tr><td></td><td>Kontactus llamadas</td><td class="r">~6,200</td><td class="r">~26,900</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
+          <tr><td></td><td>Labs Mobile SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
+          <tr><td></td><td>GoHighLevel emails</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
+          <tr><td></td><td>Mailgun emails (19.3%)</td><td class="r">3,247</td><td class="r">4,117</td><td class="r">5,393</td><td class="r">&mdash;</td><td class="r">12,598</td></tr>
+          <tr class="subtotal"><td></td><td><strong>Subtotal cobranza</strong></td><td class="r"><strong>161,038</strong></td><td class="r"><strong>247,547</strong></td><td class="r"><strong>287,639</strong></td><td class="r"><strong>343,437</strong></td><td class="r"><strong>235,160</strong></td></tr>
+
+          <tr class="group-row"><td colspan="7">COMERCIAL (retargeting + entrega + otros)</td></tr>
+          <tr><td></td><td>Blip WA</td><td class="r">1,916</td><td class="r">4,281</td><td class="r">28,950</td><td class="r">35,445</td><td class="r">&mdash;</td></tr>
+          <tr><td></td><td>Mailgun emails (29.4%)</td><td class="r">4,941</td><td class="r">6,265</td><td class="r">8,206</td><td class="r">&mdash;</td><td class="r">19,170</td></tr>
+
+          <tr class="group-row"><td colspan="7">PREADMISION (confirmaciones + firma contrato)</td></tr>
+          <tr><td></td><td>Blip WA</td><td class="r">2,427</td><td class="r">4,370</td><td class="r">7,741</td><td class="r">18,241</td><td class="r">11,045</td></tr>
+          <tr><td></td><td>Mailgun emails (51.3%)</td><td class="r">8,612</td><td class="r">10,918</td><td class="r">14,303</td><td class="r">&mdash;</td><td class="r">33,411</td></tr>
+
+          <tr class="subtotal"><td colspan="2"><strong>TOTAL GLOBAL</strong></td><td class="r"><strong>178,934</strong></td><td class="r"><strong>273,381</strong></td><td class="r"><strong>346,839</strong></td><td class="r"><strong>397,123</strong></td><td class="r"><strong>298,786</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tabla por plataforma -->
+    <div class="subsection">
+      <div class="subsection-title">Por plataforma</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Plataforma</th><th>Tipo</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th></tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row"><td><strong>Blip</strong></td><td>WA templates</td><td class="r">127,587</td><td class="r">88,325</td><td class="r">129,688</td><td class="r">148,828</td><td class="r">93,577</td></tr>
+          <tr><td><strong>Botmaker</strong></td><td>WA sesiones</td><td class="r">28,302</td><td class="r">19,696</td><td class="r">3,662</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+          <tr class="highlight-row"><td><strong>Voximplant</strong></td><td>WA HSM</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">46,115</td><td class="r">37,350</td><td class="r">20,584</td></tr>
+          <tr><td><strong>Voximplant</strong></td><td>Llamadas</td><td class="r">45</td><td class="r">115,501</td><td class="r">63,798</td><td class="r">84,252</td><td class="r">34,800</td></tr>
+          <tr class="highlight-row"><td><strong>Kontactus</strong></td><td>Llamadas</td><td class="r">~6,200</td><td class="r">~26,900</td><td class="r">66,094</td><td class="r">109,755</td><td class="r">69,176</td></tr>
+          <tr><td><strong>Labs Mobile</strong></td><td>SMS</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
+          <tr class="highlight-row"><td><strong>GoHighLevel</strong></td><td>Email cobr.</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
+          <tr><td><strong>Mailgun</strong></td><td>Email trans.</td><td class="r">16,800</td><td class="r">21,300</td><td class="r">27,902</td><td class="r">&mdash;</td><td class="r">65,179</td></tr>
+          <tr class="subtotal"><td colspan="2"><strong>TOTAL</strong></td><td class="r"><strong>183,634</strong></td><td class="r"><strong>257,381</strong></td><td class="r"><strong>346,839</strong></td><td class="r"><strong>397,123</strong></td><td class="r"><strong>298,786</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Graficos -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;">
+      <div style="background:#f9f8f4;border-radius:8px;padding:20px;">
+        <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:12px;">Volumen mensual por area de negocio</div>
+        <div style="position:relative;height:260px;"><canvas id="volAreaChart"></canvas></div>
+      </div>
+      <div style="background:#f9f8f4;border-radius:8px;padding:20px;">
+        <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:12px;">Volumen mensual por plataforma</div>
+        <div style="position:relative;height:260px;"><canvas id="volPlatChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="footnote">Mailgun distribuido proporcionalmente por area segun las 122 plantillas activas: 23 cobranzas (19.3%), 35 comercial (29.4%), 61 soporte/otros &rarr; preadmision (51.3%). Abril sin datos Mailgun.</div>
+    <div class="footnote">Cobranza domina el volumen (88-96% del total). Abril fue el pico con 397K comunicaciones. Mayo parcial (al dia 26).</div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- METODOLOGIA                                                        -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-metodologia">
+    <div class="methodology">
+      <h4>Nota metodologica</h4>
+
+      <p style="margin-bottom:12px;"><strong>Composicion de "Costo WA facturado" por area:</strong></p>
+      <ul>
+        <li><strong>Cobranza</strong> = Blip WA proporcional (por volumen de msgs) + Botmaker WA (100% cobranza) + Voximplant consumo (100% cobranza) + GHL wallet (100% cobranza)</li>
+        <li><strong>Comercial</strong> = Blip WA proporcional solamente (retargeting + entrega + otros)</li>
+        <li><strong>Preadmision</strong> = Blip WA proporcional solamente (confirmaciones + firma)</li>
+      </ul>
+
+      <p style="margin:16px 0 12px;"><strong>Denominadores:</strong></p>
+      <ul>
+        <li><strong>Cobranza:</strong> morosos total (&gt;0 dpd) de <code>cartera_historico</code></li>
+        <li><strong>Comercial:</strong> firmas retargeting = <code>solicitud.status='aprobado'</code> donde <code>source IN ('campaign-segundo', 'renueva-tu-laptop')</code></li>
+        <li><strong>Preadmision:</strong> solicitudes creadas en el mes</li>
+      </ul>
+
+      <p style="margin:16px 0 12px;"><strong>Asignacion proporcional Blip:</strong></p>
+      <ul>
+        <li>El costo WA de Blip (Marketing + Utility + Auth) se reparte entre areas segun el volumen de templates enviados por cada area en el mes.</li>
+        <li>El MAUS Monthly Fee ($600) y Additional Automated Conversations son costos de plataforma, no incluidos en el costo por area.</li>
+      </ul>
+
+      <p style="margin:16px 0 0;"><strong>Tarifas Blip vigentes:</strong> MKT $0.0803/conv &middot; UTIL $0.0300/conv &middot; AUTH $0.0296/conv &middot; Automated $0.0070/conv. Estas tarifas incluyen el fee Meta + margen del proveedor.</p>
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 4: DESGLOSE POR GRUPO DE CAMPANAS                        -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-campanas">
+    <div class="section-num">4</div>
+    <h2 class="section-head">Desglose por grupo de campanas</h2>
+    <div class="section-desc">Volumen y costo por grupo de campana y proveedor &middot; Enero&ndash;Mayo 2026<br>
+    <span style="font-size:11px;">Nivel mas granular que la Seccion 2. Cada grupo muestra mensajes y costo estimado.</span></div>
+
+    <table class="driver-table">
+      <thead>
+        <tr>
+          <th style="width:200px;">Grupo de campanas</th>
+          <th>Proveedor</th>
+          <th class="r">Ene</th>
+          <th class="r">Feb</th>
+          <th class="r">Mar</th>
+          <th class="r">Abr</th>
+          <th class="r">May</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ============================================================ -->
+        <!-- COBRANZA                                                      -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="7">Cobranza</td></tr>
+
+        <tr class="group-header"><td colspan="7">Morosos (genericos dia X)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">55,983</td><td class="r">63,086</td><td class="r">72,850</td><td class="r">65,934</td><td class="r">56,326</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$2,637</td><td class="r" style="color:#888;">$4,284</td><td class="r" style="color:#888;">$4,941</td><td class="r" style="color:#888;">$4,940</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Preventivos</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">30,896</td><td class="r">16,588</td><td class="r">17,030</td><td class="r">16,006</td><td class="r">15,783</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$1,456</td><td class="r" style="color:#888;">$1,127</td><td class="r" style="color:#888;">$1,155</td><td class="r" style="color:#888;">$1,199</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker</td><td class="r">558</td><td class="r">50</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker</td><td class="r" style="color:#888;">$34</td><td class="r" style="color:#888;">$7</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Autoreprogramacion</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">0</td><td class="r">3,117</td><td class="r">9,000</td><td class="r">4,703</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$211</td><td class="r" style="color:#888;">$674</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Recordatorio grupo</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">0</td><td class="r">0</td><td class="r">4,202</td><td class="r">4,237</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$315</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Gestores (por nombre)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker Jahaira</td><td class="r">8,477</td><td class="r">2,036</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker Jahaira</td><td class="r" style="color:#888;">$511</td><td class="r" style="color:#888;">$283</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker Julio</td><td class="r">7,690</td><td class="r">4,106</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker Julio</td><td class="r" style="color:#888;">$463</td><td class="r" style="color:#888;">$572</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker Yosmar</td><td class="r">7,050</td><td class="r">3,512</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker Yosmar</td><td class="r" style="color:#888;">$425</td><td class="r" style="color:#888;">$489</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker Lidymar</td><td class="r">4,315</td><td class="r">2,824</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker Lidymar</td><td class="r" style="color:#888;">$260</td><td class="r" style="color:#888;">$393</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Botmaker Anderson</td><td class="r">&mdash;</td><td class="r">2,357</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Botmaker Anderson</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$328</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Cobranza moderada (WA HSM)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Voximplant moderada_v2</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">36,246</td><td class="r">37,350</td><td class="r">20,584</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Voximplant moderada_v2</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$80</td><td class="r" style="color:#888;">$1,046</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Voximplant moderada</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,037</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Voximplant moderada</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$20</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Voximplant gestores (4)</td><td class="r">&mdash;</td><td class="r">1,659</td><td class="r">832</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Voximplant gestores (4)</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">[ ]</td><td class="r" style="color:#888;">[ ]</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">SMS cobranza</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Labs Mobile</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">9,580</td><td class="r">12,659</td><td class="r">4,003</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Labs Mobile</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">S/ 709</td><td class="r" style="color:#888;">S/ 990</td><td class="r" style="color:#888;">S/ 365</td></tr>
+
+        <tr class="group-header"><td colspan="7">Email cobranza</td></tr>
+        <tr><td class="indent">Mensajes</td><td>GoHighLevel</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">4,279</td><td class="r">11,467</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">GoHighLevel</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$3</td><td class="r" style="color:#888;">$19</td></tr>
+
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal cobranza &mdash; msgs</strong></td>
+          <td class="r"><strong>114,969</strong></td>
+          <td class="r"><strong>96,218</strong></td>
+          <td class="r"><strong>148,692</strong></td>
+          <td class="r"><strong>149,430</strong></td>
+          <td class="r"><strong>117,103</strong></td></tr>
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal cobranza &mdash; costo USD</strong></td>
+          <td class="r"><strong>$5,786</strong></td>
+          <td class="r"><strong>$7,483</strong></td>
+          <td class="r"><strong>$6,407</strong></td>
+          <td class="r"><strong>$8,177</strong></td>
+          <td class="r"><strong>$19</strong> *</td></tr>
+
+        <tr class="spacer"><td colspan="7"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- COMERCIAL                                                     -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="7">Comercial</td></tr>
+
+        <tr class="group-header"><td colspan="7">Campanas masivas (sorteos, difusion)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">0</td><td class="r">21,415</td><td class="r">14,495</td><td class="r">15,080</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$1,452</td><td class="r" style="color:#888;">$1,086</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Referidos / embajadores</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">276</td><td class="r">1,241</td><td class="r">303</td><td class="r">266</td><td class="r">3,932</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$13</td><td class="r" style="color:#888;">$84</td><td class="r" style="color:#888;">$21</td><td class="r" style="color:#888;">$20</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal comercial &mdash; msgs</strong></td>
+          <td class="r"><strong>276</strong></td>
+          <td class="r"><strong>1,241</strong></td>
+          <td class="r"><strong>21,718</strong></td>
+          <td class="r"><strong>14,761</strong></td>
+          <td class="r"><strong>19,012</strong></td></tr>
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal comercial &mdash; costo USD</strong></td>
+          <td class="r"><strong>$13</strong></td>
+          <td class="r"><strong>$84</strong></td>
+          <td class="r"><strong>$1,473</strong></td>
+          <td class="r"><strong>$1,106</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <tr class="spacer"><td colspan="7"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- PREADMISION                                                   -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="7">Preadmision</td></tr>
+
+        <tr class="group-header"><td colspan="7">Confirmacion de solicitud</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">1,535</td><td class="r">2,832</td><td class="r">4,724</td><td class="r">8,116</td><td class="r">4,163</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$72</td><td class="r" style="color:#888;">$192</td><td class="r" style="color:#888;">$320</td><td class="r" style="color:#888;">$608</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Decision crediticia (aprobacion/rechazo)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">801</td><td class="r">1,226</td><td class="r">2,460</td><td class="r">4,031</td><td class="r">1,887</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$38</td><td class="r" style="color:#888;">$83</td><td class="r" style="color:#888;">$167</td><td class="r" style="color:#888;">$302</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Firma de contrato</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">0</td><td class="r">0</td><td class="r">4,109</td><td class="r">3,219</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$308</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Verificacion (WhatsApp code)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">91</td><td class="r">312</td><td class="r">557</td><td class="r">1,985</td><td class="r">1,776</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$4</td><td class="r" style="color:#888;">$21</td><td class="r" style="color:#888;">$38</td><td class="r" style="color:#888;">$149</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal preadmision &mdash; msgs</strong></td>
+          <td class="r"><strong>2,427</strong></td>
+          <td class="r"><strong>4,370</strong></td>
+          <td class="r"><strong>7,741</strong></td>
+          <td class="r"><strong>18,241</strong></td>
+          <td class="r"><strong>11,045</strong></td></tr>
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal preadmision &mdash; costo USD</strong></td>
+          <td class="r"><strong>$114</strong></td>
+          <td class="r"><strong>$296</strong></td>
+          <td class="r"><strong>$525</strong></td>
+          <td class="r"><strong>$1,367</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <tr class="spacer"><td colspan="7"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- ENTREGA / OPS                                                 -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="7">Entrega / Ops</td></tr>
+
+        <tr class="group-header"><td colspan="7">Locker Truck</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">696</td><td class="r">1,759</td><td class="r">8,987</td><td class="r">12,552</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$47</td><td class="r" style="color:#888;">$119</td><td class="r" style="color:#888;">$673</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Logistica (entrega, recojo)</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">184</td><td class="r">330</td><td class="r">430</td><td class="r">937</td><td class="r">289</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$9</td><td class="r" style="color:#888;">$22</td><td class="r" style="color:#888;">$29</td><td class="r" style="color:#888;">$70</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">School Rental</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">0</td><td class="r">0</td><td class="r">28</td><td class="r">2</td><td class="r">0</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">&mdash;</td><td class="r" style="color:#888;">$2</td><td class="r" style="color:#888;">$0</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal entrega / ops &mdash; msgs</strong></td>
+          <td class="r"><strong>184</strong></td>
+          <td class="r"><strong>1,026</strong></td>
+          <td class="r"><strong>2,217</strong></td>
+          <td class="r"><strong>9,926</strong></td>
+          <td class="r"><strong>12,841</strong></td></tr>
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal entrega / ops &mdash; costo USD</strong></td>
+          <td class="r"><strong>$9</strong></td>
+          <td class="r"><strong>$69</strong></td>
+          <td class="r"><strong>$150</strong></td>
+          <td class="r"><strong>$743</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+        <tr class="spacer"><td colspan="7"></td></tr>
+
+        <!-- ============================================================ -->
+        <!-- OTROS                                                         -->
+        <!-- ============================================================ -->
+        <tr class="area-header"><td colspan="7">Otros</td></tr>
+
+        <tr class="group-header"><td colspan="7">Bienvenida cliente</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">338</td><td class="r">523</td><td class="r">921</td><td class="r">1,389</td><td class="r">2,440</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$16</td><td class="r" style="color:#888;">$36</td><td class="r" style="color:#888;">$62</td><td class="r" style="color:#888;">$104</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Encuesta satisfaccion</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">304</td><td class="r">466</td><td class="r">839</td><td class="r">1,218</td><td class="r">988</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$14</td><td class="r" style="color:#888;">$32</td><td class="r" style="color:#888;">$57</td><td class="r" style="color:#888;">$91</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="group-header"><td colspan="7">Sin clasificar</td></tr>
+        <tr><td class="indent">Mensajes</td><td>Blip WA</td><td class="r">37,179</td><td class="r">1,025</td><td class="r">3,255</td><td class="r">8,151</td><td class="r">13,530</td></tr>
+        <tr><td class="indent" style="color:#888;">Costo</td><td style="color:#888;">Blip WA</td><td class="r" style="color:#888;">$1,752</td><td class="r" style="color:#888;">$70</td><td class="r" style="color:#888;">$221</td><td class="r" style="color:#888;">$611</td><td class="r" style="color:#888;">&mdash;</td></tr>
+
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal otros &mdash; msgs</strong></td>
+          <td class="r"><strong>37,821</strong></td>
+          <td class="r"><strong>2,014</strong></td>
+          <td class="r"><strong>5,015</strong></td>
+          <td class="r"><strong>10,758</strong></td>
+          <td class="r"><strong>16,958</strong></td></tr>
+        <tr class="subtotal"><td colspan="2"><strong>Subtotal otros &mdash; costo USD</strong></td>
+          <td class="r"><strong>$1,782</strong></td>
+          <td class="r"><strong>$138</strong></td>
+          <td class="r"><strong>$340</strong></td>
+          <td class="r"><strong>$806</strong></td>
+          <td class="r"><strong>&mdash;</strong></td></tr>
+
+      </tbody>
+    </table>
+
+    <div class="footnote" style="background:#f9f8f4; border:1px solid #ececec; padding:14px 16px; margin-bottom:12px; font-family:-apple-system,'Segoe UI',system-ui,sans-serif; font-size:12px; line-height:1.7;">
+      <strong>Verificacion contra factura Blip:</strong><br>
+      &nbsp;&nbsp;ENE: Sum grupos = $6,012 vs Factura = $6,011.58 (diff -$0.42) <span class="tag-check">&#10003;</span><br>
+      &nbsp;&nbsp;FEB: Sum grupos = $5,998 vs Factura = $5,999.75 (diff +$1.75) <span class="tag-check">&#10003;</span><br>
+      &nbsp;&nbsp;MAR: Sum grupos = $8,793 vs Factura = $8,788.95 (diff -$4.05) <span class="tag-check">&#10003;</span><br>
+      &nbsp;&nbsp;ABR: Sum grupos = $11,140 vs Factura = $11,146.44 (diff +$6.44) <span class="tag-check">&#10003;</span><br><br>
+      <em>Nota: La diferencia de redondeo (&lt;$7) se produce porque se usa un costo blended por mensaje
+      (factura total / templates DB) en vez de separar cada template por categoria Meta (MKT $0.0803 vs UTIL $0.03).
+      La factura cobra por CONVERSACION (ventana 24hrs), la DB cuenta MENSAJES individuales.</em>
+    </div>
+
+    <div class="footnote">Costo Blip = mensajes DB &times; costo COMPLETO por mensaje (factura total / templates DB). Incluye plataforma (MAUS $600 + Automated Conv $0.007) + WA fee (MKT $0.0803 + UTIL $0.03 + AUTH $0.03). ENE $0.047/msg, FEB $0.068/msg, MAR $0.068/msg, ABR $0.075/msg. Botmaker = logs DB &times; costo por log. Voximplant = Services de factura. Labs Mobile y Kontactus en PEN, no sumados al total USD.</div>
+    <div class="footnote" style="margin-top:8px;">Clasificacion automatica por nombre de template. "Sin clasificar" incluye templates nuevos o con nombres no estandarizados &mdash; representa 29% en enero (alto por ser el primer mes) y baja a 5&ndash;9% en meses posteriores. (*) Mayo: sin factura Blip, solo se muestran costos de GHL.</div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 5: ENVIOS POR NUMERO DE CELULAR                            -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-intensidad">
+    <div class="section-num">5</div>
+    <h2 class="section-head">Intensidad de envio por numero de celular</h2>
+    <div class="section-desc">Distribucion de templates Blip WA enviados por telefono &middot; Enero&ndash;Mayo 2026<br>
+    <span style="font-size:11px;">Fuente: blip_whatsapp_logs · message_type = template · agrupado por phone × mes</span></div>
+
+    <table class="driver-table">
+      <thead>
+        <tr>
+          <th style="width:140px;">Msgs / telefono</th>
+          <th class="r">Ene<br><span style="font-weight:400;font-size:10px;">phones / msgs</span></th>
+          <th class="r">Feb<br><span style="font-weight:400;font-size:10px;">phones / msgs</span></th>
+          <th class="r">Mar<br><span style="font-weight:400;font-size:10px;">phones / msgs</span></th>
+          <th class="r">Abr<br><span style="font-weight:400;font-size:10px;">phones / msgs</span></th>
+          <th class="r">May<br><span style="font-weight:400;font-size:10px;">phones / msgs</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="indent">1 msg</td>
+          <td class="r">2,768 / 2,768</td><td class="r">2,993 / 2,993</td><td class="r">2,981 / 2,981</td><td class="r">4,901 / 4,901</td><td class="r">6,664 / 6,664</td></tr>
+        <tr><td class="indent">2&ndash;3 msgs</td>
+          <td class="r">2,125 / 5,026</td><td class="r">2,987 / 7,232</td><td class="r">3,287 / 7,879</td><td class="r">3,898 / 9,144</td><td class="r">3,521 / 8,489</td></tr>
+        <tr><td class="indent">4&ndash;5 msgs</td>
+          <td class="r">1,421 / 6,429</td><td class="r">1,383 / 6,078</td><td class="r">1,558 / 6,871</td><td class="r">2,345 / 10,682</td><td class="r">2,065 / 9,220</td></tr>
+        <tr><td class="indent">6&ndash;10 msgs</td>
+          <td class="r">2,149 / 16,301</td><td class="r">1,558 / 11,374</td><td class="r">1,764 / 13,177</td><td class="r">2,835 / 20,943</td><td class="r">2,750 / 21,037</td></tr>
+        <tr><td class="indent">11&ndash;15 msgs</td>
+          <td class="r">1,268 / 15,839</td><td class="r">504 / 6,425</td><td class="r">589 / 7,584</td><td class="r">1,211 / 15,025</td><td class="r">1,414 / 18,111</td></tr>
+        <tr><td class="indent">16&ndash;20 msgs</td>
+          <td class="r">575 / 10,237</td><td class="r">264 / 4,716</td><td class="r">491 / 8,679</td><td class="r">435 / 7,700</td><td class="r">641 / 11,350</td></tr>
+        <tr><td class="indent">21&ndash;30 msgs</td>
+          <td class="r">1,570 / 39,862</td><td class="r">1,775 / 48,178</td><td class="r">609 / 15,595</td><td class="r">1,368 / 38,086</td><td class="r">1,723 / 43,303</td></tr>
+        <tr><td class="indent">31&ndash;50 msgs</td>
+          <td class="r">699 / 27,671</td><td class="r">27 / 860</td><td class="r">1,644 / 54,499</td><td class="r">819 / 30,583</td><td class="r">319 / 12,623</td></tr>
+        <tr><td class="indent">50+ msgs</td>
+          <td class="r">55 / 3,454</td><td class="r">5 / 469</td><td class="r">203 / 12,423</td><td class="r">162 / 11,764</td><td class="r">146 / 10,108</td></tr>
+
+        <tr class="subtotal">
+          <td class="indent"><strong>Total</strong></td>
+          <td class="r"><strong>12,630 / 127,587</strong></td>
+          <td class="r"><strong>11,496 / 88,325</strong></td>
+          <td class="r"><strong>13,126 / 129,688</strong></td>
+          <td class="r"><strong>17,974 / 148,828</strong></td>
+          <td class="r"><strong>19,243 / 140,905</strong></td>
+        </tr>
+        <tr class="driver-row">
+          <td>&nbsp;&nbsp;&#9654; Promedio msgs / phone</td>
+          <td class="r"><strong>10.1</strong></td>
+          <td class="r"><strong>7.7</strong></td>
+          <td class="r"><strong>9.9</strong></td>
+          <td class="r"><strong>8.3</strong></td>
+          <td class="r"><strong>7.3</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="subsection">
+      <div class="subsection-title">Concentracion: telefonos con 21+ msgs al mes</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Metrica</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th><th class="r">May</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Telefonos con 21+ msgs</td><td class="r">2,324</td><td class="r">1,807</td><td class="r">2,456</td><td class="r">2,349</td><td class="r">2,188</td></tr>
+          <tr><td>% del total de phones</td><td class="r">18.4%</td><td class="r">15.7%</td><td class="r">18.7%</td><td class="r">13.1%</td><td class="r">11.4%</td></tr>
+          <tr class="driver-row"><td>Msgs generados</td><td class="r"><strong>70,987</strong></td><td class="r"><strong>49,507</strong></td><td class="r"><strong>82,517</strong></td><td class="r"><strong>80,433</strong></td><td class="r"><strong>66,034</strong></td></tr>
+          <tr class="driver-row"><td>% del total de msgs</td><td class="r"><strong>55.6%</strong></td><td class="r"><strong>56.1%</strong></td><td class="r"><strong>63.6%</strong></td><td class="r"><strong>54.0%</strong></td><td class="r"><strong>46.9%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Cruce con factura: conversaciones vs mensajes</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Metrica</th><th class="r">Ene</th><th class="r">Feb</th><th class="r">Mar</th><th class="r">Abr</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Templates DB (mensajes individuales)</td><td class="r">127,587</td><td class="r">88,325</td><td class="r">129,688</td><td class="r">148,828</td></tr>
+          <tr><td>Phone &times; day combos (DB)</td><td class="r">100,261</td><td class="r">85,724</td><td class="r">107,620</td><td class="r">115,811</td></tr>
+          <tr><td>WA conv facturadas (MKT+UTIL+AUTH)</td><td class="r">53,846</td><td class="r">54,472</td><td class="r">79,122</td><td class="r">105,841</td></tr>
+          <tr class="driver-row"><td>Ratio msgs DB / conv factura</td><td class="r"><strong>2.37</strong></td><td class="r"><strong>1.62</strong></td><td class="r"><strong>1.64</strong></td><td class="r"><strong>1.41</strong></td></tr>
+          <tr class="driver-row"><td>Ratio phone&times;day / conv factura</td><td class="r"><strong>1.86</strong></td><td class="r"><strong>1.57</strong></td><td class="r"><strong>1.36</strong></td><td class="r"><strong>1.09</strong></td></tr>
+          <tr><td>Diff phone&times;day vs conv factura</td><td class="r" style="color:#c62828;">+46,415</td><td class="r" style="color:#c62828;">+31,252</td><td class="r" style="color:#c62828;">+28,498</td><td class="r">+9,970</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footnote">
+      <strong>Concentracion:</strong> ~13-19% de los telefonos (los que reciben 21+ msgs/mes) generan 47-64% de todos los mensajes. Son los clientes en mora recurrente que reciben templates de cobranza diariamente.<br><br>
+      <strong>Cruce con factura:</strong> Las conversaciones facturadas son MENOS que los phone&times;day de la DB. Esto es esperado: Meta agrupa en ventanas de 24hrs. En enero la diferencia era grande (1.86x) porque se enviaban muchos templates al mismo user en el mismo dia. En abril convergio a 1.09x — Blip esta cobrando aproximadamente lo correcto. Los envios de prueba identificados (source='test', numero 999999999) son &lt;0.5% del volumen y no explican la diferencia.
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 6: DETALLE POR NUMERO DE CELULAR                          -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-detalle-phones">
+    <div class="section-num">6</div>
+    <h2 class="section-head">Detalle: envios por numero de celular</h2>
+    <div class="section-desc">Templates Blip WA por numero y mes &middot; Enero&ndash;Mayo 2026<br>
+    <span style="font-size:11px;">Fuente: blip_whatsapp_logs &middot; message_type = template</span></div>
+
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+      <select id="monthSelect" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-weight:600;">
+        <option value="ene">Enero 2026 (12,630 numeros)</option>
+        <option value="feb">Febrero 2026 (11,496 numeros)</option>
+        <option value="mar">Marzo 2026 (13,126 numeros)</option>
+        <option value="abr" selected>Abril 2026 (17,974 numeros)</option>
+        <option value="may">Mayo 2026 (19,243 numeros)</option>
+      </select>
+      <input type="text" id="phoneSearch" placeholder="Buscar numero..." style="padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:13px;width:180px;">
+      <span id="phoneCount" style="font-size:12px;color:#666;"></span>
+    </div>
+
+    <div style="max-height:600px;overflow-y:auto;border:1px solid #ececec;border-radius:4px;">
+      <table class="data-table" id="phoneTable" style="margin:0;">
+        <thead style="position:sticky;top:0;z-index:1;">
+          <tr>
+            <th style="width:50px;">#</th>
+            <th style="width:160px;">Numero</th>
+            <th class="r">Mensajes</th>
+            <th class="r">Costo (USD)</th>
+          </tr>
+        </thead>
+        <tbody id="phoneBody">
+          <tr><td colspan="4" style="text-align:center;color:#999;padding:40px;">Cargando datos...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="phonePagination" style="display:flex;gap:8px;align-items:center;margin-top:12px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:12px;color:#666;">
+    </div>
+
+    <div id="phoneSummary" style="margin-top:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;color:#333;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:14px 18px;">
+    </div>
+
+    <div class="footnote" style="margin-top:12px;">
+      Selecciona un mes para ver todos los numeros que recibieron templates ese mes, ordenados de mayor a menor. Usa el buscador para encontrar un numero especifico. Datos cargados desde <code>phone_by_month.json</code>.
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 7: DETALLE POR PLANTILLA                                   -->
+  <!-- ================================================================== -->
+  <!-- Template content modal -->
+  <div id="tplModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center;">
+    <div style="background:#fff;border-radius:8px;padding:28px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;position:relative;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+      <button onclick="closeTplModal()" style="position:absolute;top:12px;right:16px;border:none;background:none;font-size:20px;cursor:pointer;color:#999;">&times;</button>
+      <div id="tplModalContent"></div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-detalle-templates">
+    <div class="section-num">7</div>
+    <h2 class="section-head">Detalle: envios por plantilla WhatsApp</h2>
+    <div class="section-desc">207 plantillas de 3 proveedores (Blip, Voximplant, Botmaker) &middot; Solo WhatsApp &middot; Enero&ndash;Mayo 2026</div>
+
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+      <select id="tplMes" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-weight:600;">
+        <option value="todos">Todos los meses</option>
+        <option value="ene">Enero</option>
+        <option value="feb">Febrero</option>
+        <option value="mar">Marzo</option>
+        <option value="abr" selected>Abril</option>
+        <option value="may">Mayo</option>
+      </select>
+      <select id="tplCategoria" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+        <option value="todas">Todas las categorias</option>
+        <option value="cobranza_mora">Cobranza mora</option>
+        <option value="cobranza_preventiva">Cobranza preventiva</option>
+        <option value="comercial">Comercial</option>
+        <option value="preadmision">Preadmision</option>
+        <option value="entrega">Entrega / Ops</option>
+        <option value="otros">Otros</option>
+      </select>
+      <select id="tplProveedor" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+        <option value="todos">Todos los proveedores</option>
+        <option value="blip">Blip</option>
+        <option value="voximplant">Voximplant</option>
+        <option value="botmaker">Botmaker</option>
+      </select>
+      <select id="tplMetaCat" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+        <option value="todos">Tipo Meta: todos</option>
+        <option value="MARKETING">Marketing ($0.0803)</option>
+        <option value="UTILITY">Utility ($0.03)</option>
+        <option value="AUTHENTICATION">Authentication ($0.03)</option>
+      </select>
+      <input type="text" id="tplSearch" placeholder="Buscar plantilla..." style="padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:13px;width:180px;">
+      <span id="tplCount" style="font-size:12px;color:#666;"></span>
+    </div>
+
+    <div style="max-height:700px;overflow-y:auto;border:1px solid #ececec;border-radius:4px;">
+      <table class="data-table" id="tplTable" style="margin:0;">
+        <thead style="position:sticky;top:0;z-index:1;">
+          <tr>
+            <th style="width:20px;"></th>
+            <th style="width:80px;">Proveedor</th>
+            <th>Plantilla</th>
+            <th style="width:70px;">Area</th>
+            <th style="width:70px;">Tipo Meta</th>
+            <th class="r">Msgs</th>
+            <th class="r">Costo</th>
+            <th style="width:40px;"></th>
+          </tr>
+        </thead>
+        <tbody id="tplBody">
+          <tr><td colspan="6" style="text-align:center;color:#999;padding:40px;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tplSummary" style="margin-top:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;color:#333;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:14px 18px;">
+    </div>
+
+    <div class="footnote" style="margin-top:12px;">
+      Solo incluye mensajes WhatsApp (templates HSM). No incluye emails (Mailgun/GHL), SMS (Labs Mobile) ni llamadas (Voximplant PSTN/Kontactus). Clasificacion automatica por nombre de plantilla.
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 8: LLAMADAS POR NUMERO                                     -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-detalle-calls">
+    <div class="section-num">8</div>
+    <h2 class="section-head">Detalle: llamadas Voximplant por numero</h2>
+    <div class="section-desc">Llamadas salientes (PSTN) por numero de destino &middot; Fuente: Voximplant Kit API &middot; searchCalls</div>
+
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+      <select id="callMonth" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-weight:600;">
+        <option value="ene">Enero</option>
+        <option value="feb">Febrero</option>
+        <option value="mar">Marzo</option>
+        <option value="abr" selected>Abril</option>
+        <option value="may">Mayo</option>
+      </select>
+      <input type="text" id="callSearch" placeholder="Buscar numero..." style="padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:13px;width:180px;">
+      <span id="callCount" style="font-size:12px;color:#666;"></span>
+    </div>
+
+    <div style="max-height:600px;overflow-y:auto;border:1px solid #ececec;border-radius:4px;">
+      <table class="data-table" id="callTable" style="margin:0;">
+        <thead style="position:sticky;top:0;z-index:1;">
+          <tr>
+            <th style="width:50px;">#</th>
+            <th style="width:180px;">Numero destino</th>
+            <th class="r">Llamadas</th>
+            <th class="r">Costo est. (USD)</th>
+          </tr>
+        </thead>
+        <tbody id="callBody">
+          <tr><td colspan="4" style="text-align:center;color:#999;padding:40px;">Cargando datos...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="callPagination" style="display:flex;gap:8px;align-items:center;margin-top:12px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:12px;color:#666;"></div>
+
+    <div id="callSummary" style="margin-top:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;color:#333;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:14px 18px;"></div>
+
+    <div class="footnote" style="margin-top:12px;">
+      Datos de la API Voximplant Kit (searchCalls). Costo estimado usando tarifa PSTN ~$0.0033/llamada (derivada de factura). Solo incluye llamadas Voximplant, no Kontactus. Meses sin datos muestran "no disponible".
+    </div>
+  </div>
+
+
+  <!-- ================================================================== -->
+  <!-- SECCION 9: COBRANZA POR DIAS DE ATRASO                             -->
+  <!-- ================================================================== -->
+  <!-- ================================================================== -->
+  <!-- SECCION 10: FICHA POR PLANTILLA                                    -->
+  <!-- ================================================================== -->
+  <div class="section" id="sec-ficha-plantilla">
+    <div class="section-num">9</div>
+    <h2 class="section-head">Ficha por plantilla</h2>
+    <div class="section-desc">Selecciona una plantilla para ver su desglose mensual con porcentajes por area, tipo Meta y total</div>
+
+    <!-- Resumen general: tabla periodo x porcentajes -->
+    <div id="fichaResumen" style="margin-bottom:32px;">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+        <select id="fichaAreaFilter" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+          <option value="todas">Todas las areas</option>
+          <option value="cobranza_mora">Cobranza mora</option>
+          <option value="cobranza_preventiva">Cobranza preventiva</option>
+          <option value="comercial">Comercial</option>
+          <option value="preadmision">Preadmision</option>
+          <option value="entrega">Entrega / Ops</option>
+          <option value="otros">Otros</option>
+        </select>
+        <select id="fichaMetaFilter" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+          <option value="todos">Todos los tipos Meta</option>
+          <option value="MARKETING">Marketing</option>
+          <option value="UTILITY">Utility</option>
+          <option value="AUTHENTICATION">Authentication</option>
+        </select>
+        <select id="fichaProvFilter" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;">
+          <option value="todos">Todos los proveedores</option>
+          <option value="blip">Blip</option>
+          <option value="voximplant">Voximplant</option>
+          <option value="botmaker">Botmaker</option>
+        </select>
+      </div>
+
+      <div id="fichaResumenInfo" style="font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;margin-bottom:12px;padding:10px 14px;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;"></div>
+
+      <table class="data-table" id="fichaResumenTable">
+        <thead>
+          <tr>
+            <th>Periodo</th>
+            <th class="r">Mensajes</th>
+            <th class="r">% del total</th>
+            <th class="r" id="fichaResAreaCol">% del area</th>
+            <th class="r" id="fichaResMetaCol">% del tipo Meta</th>
+            <th class="r">Plantillas</th>
+          </tr>
+        </thead>
+        <tbody id="fichaResumenBody"></tbody>
+      </table>
+    </div>
+
+    <div style="border-top:1px solid #ececec;padding-top:24px;margin-top:8px;">
+      <div style="font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#999;margin-bottom:12px;">Detalle por plantilla individual</div>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+        <select id="fichaPlantilla" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;width:400px;">
+          <option value="">Seleccionar plantilla...</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="fichaContent" style="display:none;">
+      <div id="fichaInfo" style="font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;margin-bottom:16px;padding:14px 18px;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;"></div>
+
+      <table class="data-table" id="fichaTable">
+        <thead>
+          <tr>
+            <th>Periodo</th>
+            <th class="r">Mensajes</th>
+            <th class="r">% del total</th>
+            <th class="r" id="fichaAreaHeader">% del area</th>
+            <th class="r" id="fichaMetaHeader">% del tipo Meta</th>
+          </tr>
+        </thead>
+        <tbody id="fichaBody"></tbody>
+      </table>
+
+      <div id="fichaMsg" style="margin-top:16px;padding:14px 18px;background:#dcf8c6;border-radius:8px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;white-space:pre-wrap;display:none;"></div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-dias-atraso">
+    <div class="section-num">10</div>
+    <h2 class="section-head">Cobranza por dias de atraso</h2>
+    <div class="section-desc">Mensajes enviados por tramo de mora &middot; Dias negativos = preventivos (antes del vencimiento)</div>
+
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;">
+      <select id="diasMes" style="padding:8px 14px;border:1px solid #ddd;border-radius:4px;font-size:13px;font-weight:600;">
+        <option value="2026-01">Enero</option>
+        <option value="2026-02">Febrero</option>
+        <option value="2026-03">Marzo</option>
+        <option value="2026-04" selected>Abril</option>
+      </select>
+      <span id="diasCount" style="font-size:12px;color:#666;"></span>
+    </div>
+
+    <div style="max-height:600px;overflow-y:auto;border:1px solid #ececec;border-radius:4px;">
+      <table class="data-table" id="diasTable" style="margin:0;">
+        <thead style="position:sticky;top:0;z-index:1;">
+          <tr>
+            <th style="width:140px;">Dias de atraso</th>
+            <th class="r">Mensajes</th>
+            <th class="r">Numeros</th>
+            <th class="r">Msgs/numero</th>
+            <th class="r">Costo (USD)</th>
+            <th class="r">% del total</th>
+          </tr>
+        </thead>
+        <tbody id="diasBody">
+          <tr><td colspan="6" style="text-align:center;color:#999;padding:40px;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="diasSummary" style="margin-top:16px;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;font-size:13px;color:#333;background:#f9f8f4;border:1px solid #ebeae3;border-radius:4px;padding:14px 18px;"></div>
+
+    <div class="footnote" style="margin-top:12px;">
+      Dias negativos (-4 a -1) = preventivos enviados antes de la fecha de vencimiento. Dia 0 = dia de vencimiento. Dias 1-30 = morosos. "gestor" = plantillas de gestores de cobranza (Botmaker/Blip). "moderada" = Voximplant WA HSM. "autoreprog" = autoreprogramacion. Costo calculado con tarifa blended del mes.<br><br>
+      <strong>Nota:</strong> Ene y feb no incluyen ~212 y ~4,803 mensajes de gestores Botmaker (planilla_cobranza_anderson y otros) que no tienen tramo de mora en el nombre de la plantilla. Estos mensajes si estan contabilizados en la Seccion 2 como parte del total de cobranza. Mar y abr cuadran al 100% con la Seccion 2.
+    </div>
+  </div>
+
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Balde K S.A.C. &middot; Drivers de gasto &mdash; mensajeria y voz &middot; Enero&ndash;Mayo 2026<br>
+    Generado: junio 2026 &middot; Fuentes: Blip, Botmaker, Voximplant, GoHighLevel, Mailgun, Labs Mobile, Kontactus
+  </div>
+
+</div>
+
+<script src="phone_inline.js"></script>
+<script src="calls_data.js"></script>
+<script src="template_data.js"></script>
+<script src="template_phones.js"></script>
+<script src="template_contents.js"></script>
+<script src="dias_atraso_data.js"></script>
+<script src="template_totals.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const ink = '#1a1a1a';
+  const s1 = '#555';
+  const s2 = '#888';
+  const s3 = '#bbb';
+  const s4 = '#ddd';
+  const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'];
+  const scaleOpts = {
+    x: { grid: { display: false } },
+    y: { stacked: true, grid: { color: '#ececec' }, ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v } }
+  };
+
+  // Volumen por plataforma (stacked bar)
+  new Chart(document.getElementById('volPlatBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+      datasets: [
+        { label: 'Blip WA', data: [127587,88325,129688,148828], backgroundColor: ink, borderRadius: 2 },
+        { label: 'Botmaker', data: [28302,19696,3662,0], backgroundColor: '#444', borderRadius: 2 },
+        { label: 'Vox HSM', data: [0,1659,46115,37350], backgroundColor: s1, borderRadius: 2 },
+        { label: 'Vox Calls', data: [45,115501,63798,84252], backgroundColor: s2, borderRadius: 2 },
+        { label: 'Kontactus', data: [6200,26900,66094,109755], backgroundColor: s3, borderRadius: 2 },
+        { label: 'Labs SMS', data: [0,0,9580,12659], backgroundColor: '#ccc', borderRadius: 2 },
+        { label: 'GHL Email', data: [0,0,0,4279], backgroundColor: '#aaa', borderRadius: 2 },
+        { label: 'Mailgun', data: [16800,21300,27902,0], backgroundColor: s4, borderRadius: 2 }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } },
+      scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#ececec' }, ticks: { callback: v => v>=1000?(v/1000).toFixed(0)+'K':v } } }
+    }
+  });
+
+  // Gasto USD por plataforma (grouped bar)
+  new Chart(document.getElementById('gastoPlatBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+      datasets: [
+        { label: 'Blip', data: [6012,6000,8789,11146], backgroundColor: ink, borderRadius: 2 },
+        { label: 'Botmaker', data: [3656,3626,0,0], backgroundColor: '#444', borderRadius: 2 },
+        { label: 'Voximplant', data: [1000,500,756,2112], backgroundColor: s2, borderRadius: 2 },
+        { label: 'GHL', data: [0,0,0,100], backgroundColor: '#aaa', borderRadius: 2 },
+        { label: 'Mailgun', data: [35,35,35,35], backgroundColor: s4, borderRadius: 2 }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } },
+      scales: { x: { grid: { display: false } }, y: { grid: { color: '#ececec' }, ticks: { callback: v => v>=1000?'$'+(v/1000).toFixed(0)+'K':'$'+v } } }
+    }
+  });
+
+  // By area (stacked)
+  new Chart(document.getElementById('volAreaChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Cobranza', data: [161038,247547,287639,343437,235160], backgroundColor: ink, borderRadius: 2 },
+        { label: 'Comercial', data: [6857,10546,37156,35445,19170], backgroundColor: s2, borderRadius: 2 },
+        { label: 'Preadmision', data: [11039,15288,22044,18241,44456], backgroundColor: s3, borderRadius: 2 }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: { ...scaleOpts, x: { ...scaleOpts.x, stacked: true } }
+    }
+  });
+
+  // By platform (stacked)
+  new Chart(document.getElementById('volPlatChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Blip WA', data: [127587,88325,129688,148828,93577], backgroundColor: ink, borderRadius: 2 },
+        { label: 'Botmaker', data: [28302,19696,3662,0,0], backgroundColor: '#444', borderRadius: 2 },
+        { label: 'Vox HSM', data: [0,1659,46115,37350,20584], backgroundColor: s1, borderRadius: 2 },
+        { label: 'Vox Calls', data: [45,115501,63798,84252,34800], backgroundColor: s2, borderRadius: 2 },
+        { label: 'Kontactus', data: [6200,26900,66094,109755,69176], backgroundColor: s3, borderRadius: 2 },
+        { label: 'Labs SMS', data: [0,0,9580,12659,4003], backgroundColor: '#ccc', borderRadius: 2 },
+        { label: 'GHL Email', data: [0,0,0,4279,11467], backgroundColor: '#aaa', borderRadius: 2 },
+        { label: 'Mailgun', data: [16800,21300,27902,0,65179], backgroundColor: s4, borderRadius: 2 }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } },
+      scales: { ...scaleOpts, x: { ...scaleOpts.x, stacked: true } }
+    }
+  });
+  // ── Phone detail table ──
+  const PAGE_SIZE = 100;
+  let currentPage = 0;
+  let filteredData = [];
+
+  // Data loaded from external script tag
+  if(typeof allPhoneData !== 'undefined') {
+    renderMonth();
+  } else {
+    document.getElementById('phoneBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c62828;padding:20px;">Error: datos no cargados. Verifica que phone_inline.js este en la misma carpeta.</td></tr>';
+  }
+
+  function renderMonth() {
+    const month = document.getElementById('monthSelect').value;
+    const search = document.getElementById('phoneSearch').value.trim();
+    const monthData = allPhoneData[month] || [];
+
+    filteredData = search ? monthData.filter(r => r[0].includes(search)) : monthData;
+    currentPage = 0;
+    renderPage();
+
+    // Summary
+    const totalPhones = filteredData.length;
+    const totalMsgs = filteredData.reduce((s, r) => s + r[1], 0);
+    const avg = totalPhones > 0 ? (totalMsgs / totalPhones).toFixed(1) : 0;
+    const top10 = filteredData.slice(0, 10).reduce((s, r) => s + r[1], 0);
+    const heavy = filteredData.filter(r => r[1] >= 21);
+    const heavyMsgs = heavy.reduce((s, r) => s + r[1], 0);
+
+    const totalCost = filteredData.reduce((s, r) => s + (r[2]||0), 0);
+    const top10cost = filteredData.slice(0, 10).reduce((s, r) => s + (r[2]||0), 0);
+    const heavyCost = heavy.reduce((s, r) => s + (r[2]||0), 0);
+    const costPerMsg = {ene:'$0.047',feb:'$0.068',mar:'$0.068',abr:'$0.075',may:'sin factura'}[month]||'—';
+    const testNums = filteredData.filter(r => {
+      const c = r[0].replace(/@.*$/,'').replace(/^51/,'');
+      return /^9{5,}/.test(c) || /^0{5,}/.test(c) || /(\d)\1{6,}/.test(c) || r[0]==='9999999' || r[0]==='51999955555';
+    });
+    const testMsgs = testNums.reduce((s,r) => s+r[1], 0);
+    const testCost = testNums.reduce((s,r) => s+(r[2]||0), 0);
+
+    document.getElementById('phoneSummary').innerHTML =
+      '<strong>Resumen ' + month.toUpperCase() + ':</strong><br>' +
+      totalPhones.toLocaleString() + ' numeros &middot; ' +
+      totalMsgs.toLocaleString() + ' mensajes &middot; ' +
+      '<strong>$' + totalCost.toFixed(2) + '</strong> costo total &middot; ' +
+      'Costo/msg: ' + costPerMsg + '<br>' +
+      'Promedio: <strong>' + avg + ' msgs/numero</strong> &middot; ' +
+      'Costo promedio/numero: <strong>$' + (totalPhones>0?(totalCost/totalPhones).toFixed(2):'0') + '</strong><br>' +
+      'Top 10 numeros: ' + top10.toLocaleString() + ' msgs ($' + top10cost.toFixed(2) + ') = ' + (totalMsgs>0?(top10/totalMsgs*100).toFixed(1):'0') + '% del volumen<br>' +
+      'Numeros con 21+ msgs: ' + heavy.length.toLocaleString() + ' (' + (totalPhones>0?(heavy.length/totalPhones*100).toFixed(1):'0') + '%) generan ' +
+      heavyMsgs.toLocaleString() + ' msgs / $' + heavyCost.toFixed(2) + ' (' + (totalMsgs>0?(heavyMsgs/totalMsgs*100).toFixed(1):'0') + '% del costo)' +
+      (testNums.length > 0 ? '<br><span style="color:#c62828;">&#x26A0; Numeros de prueba detectados: ' + testNums.length + ' numeros, ' + testMsgs.toLocaleString() + ' msgs, $' + testCost.toFixed(2) + ' desperdiciados</span>' : '');
+  }
+
+  function renderPage() {
+    const start = currentPage * PAGE_SIZE;
+    const end = Math.min(start + PAGE_SIZE, filteredData.length);
+    const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+
+    const tbody = document.getElementById('phoneBody');
+    let html = '';
+    for(let i = start; i < end; i++) {
+      const r = filteredData[i];
+      const clean = r[0].replace(/@.*$/,'').replace(/^51/,'');
+      const isTest = /^9{5,}/.test(clean) || /^0{5,}/.test(clean) || /(\d)\1{6,}/.test(clean) || r[0]==='9999999' || r[0]==='51999955555';
+      const bg = isTest ? '#fde8e8' : r[1] >= 50 ? '#fef9e7' : r[1] >= 21 ? '#fafaf6' : '';
+      html += '<tr' + (bg ? ' style="background:'+bg+';"' : '') + '>';
+      html += '<td style="color:#999;font-size:11px;">' + (i+1) + '</td>';
+      html += '<td style="font-family:monospace;font-size:12px;">' + r[0] + (isTest ? ' <span style="color:#c62828;font-size:10px;font-family:sans-serif;">PRUEBA</span>' : '') + '</td>';
+      html += '<td class="r" style="font-weight:700;">' + r[1].toLocaleString() + '</td>';
+      html += '<td class="r">$' + (r[2] || 0).toFixed(2) + '</td>';
+      html += '</tr>';
+    }
+    tbody.innerHTML = html || '<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">Sin resultados</td></tr>';
+
+    document.getElementById('phoneCount').textContent = filteredData.length.toLocaleString() + ' numeros';
+
+    const pag = document.getElementById('phonePagination');
+    if(totalPages <= 1) { pag.innerHTML = ''; return; }
+    let pagHtml = 'Pagina ' + (currentPage+1) + ' de ' + totalPages + ' &nbsp;';
+    if(currentPage > 0) pagHtml += '<button onclick="currentPage=0;renderPage();" style="padding:4px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;">Primera</button> ';
+    if(currentPage > 0) pagHtml += '<button onclick="currentPage--;renderPage();" style="padding:4px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;">Anterior</button> ';
+    if(currentPage < totalPages-1) pagHtml += '<button onclick="currentPage++;renderPage();" style="padding:4px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;">Siguiente</button> ';
+    if(currentPage < totalPages-1) pagHtml += '<button onclick="currentPage='+(totalPages-1)+';renderPage();" style="padding:4px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;">Ultima</button>';
+    pag.innerHTML = pagHtml;
+  }
+
+  document.getElementById('monthSelect').addEventListener('change', renderMonth);
+  document.getElementById('phoneSearch').addEventListener('input', renderMonth);
+
+  // ── Template detail table ──
+  const catColors = {cobranza_mora:'#1a1a1a',cobranza_preventiva:'#444',comercial:'#666',preadmision:'#888',entrega:'#aaa',otros:'#ccc'};
+  const metaCatColors = {MARKETING:'#c62828',UTILITY:'#2e7d32',AUTHENTICATION:'#1565c0'};
+  const provDots = {blip:'#0ea5e9',voximplant:'#f59e0b',botmaker:'#8b5cf6'};
+  const cpmFull = {ene:0.0471, feb:0.0679, mar:0.0678, abr:0.0749, may:0};
+  const testTemplates = new Set(['test_lovable','test_archivo']);
+  function isTestTpl(name) { return testTemplates.has(name) || /^test_/.test(name); }
+  // templateData: [proveedor, template, categoria, ene, feb, mar, abr, may, total, metaCat]
+  // indices:       0          1         2          3    4    5    6    7    8       9
+
+  const mesIdx = {ene:3, feb:4, mar:5, abr:6, may:7, todos:8};
+  let expandedTpl = null;
+  let phonePage = 0;
+  const PHONE_PAGE_SIZE = 50;
+
+  function renderTemplates() {
+    if(typeof templateData === 'undefined') {
+      document.getElementById('tplBody').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#c62828;padding:20px;">Error: template_data.js no cargado.</td></tr>';
+      return;
+    }
+    const mes = document.getElementById('tplMes').value;
+    const cat = document.getElementById('tplCategoria').value;
+    const prov = document.getElementById('tplProveedor').value;
+    const metaCat = document.getElementById('tplMetaCat').value;
+    const search = document.getElementById('tplSearch').value.trim().toLowerCase();
+    const idx = mesIdx[mes] || 8;
+    const rate = mes === 'todos' ? 0 : (cpmFull[mes] || 0);
+
+    let filtered = templateData.filter(r => {
+      if(cat !== 'todas' && r[2] !== cat) return false;
+      if(prov !== 'todos' && r[0] !== prov) return false;
+      if(metaCat !== 'todos' && r[9] !== metaCat) return false;
+      if(search && !r[1].toLowerCase().includes(search)) return false;
+      const msgs = idx === 8 ? r[8] : r[idx];
+      return msgs > 0;
+    });
+
+    // Sort by selected month msgs desc
+    filtered.sort((a,b) => (idx===8 ? b[8]-a[8] : b[idx]-a[idx]));
+
+    const tbody = document.getElementById('tplBody');
+    let html = '';
+    let totalMsgs = 0;
+    let totalCost = 0;
+
+    filtered.forEach(r => {
+      const msgs = idx === 8 ? r[8] : r[idx];
+      let cost;
+      if(mes === 'todos') {
+        cost = r[3]*cpmFull.ene + r[4]*cpmFull.feb + r[5]*cpmFull.mar + r[6]*cpmFull.abr;
+      } else {
+        cost = msgs * rate;
+      }
+      totalMsgs += msgs;
+      totalCost += cost;
+      const hasPhones = typeof templatePhones !== 'undefined' && mes !== 'todos';
+      const isExpanded = expandedTpl === r[1] + '_' + mes;
+
+      const tplIsTest = isTestTpl(r[1]);
+      const rowBg = tplIsTest ? 'background:#fde8e8;' : '';
+      html += '<tr style="cursor:' + (hasPhones?'pointer':'default') + ';' + rowBg + '" onclick="toggleTplPhones(\'' + r[1].replace(/'/g,"\\'") + '\',\'' + mes + '\')">';
+      html += '<td style="color:#999;font-size:11px;">' + (hasPhones ? (isExpanded ? '&#x25BC;' : '&#x25B6;') : '') + '</td>';
+      html += '<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (provDots[r[0]]||'#999') + ';margin-right:4px;"></span><span style="font-size:11px;">' + r[0] + '</span></td>';
+      html += '<td style="font-size:12px;">' + r[1] + (tplIsTest ? ' <span style="color:#c62828;font-size:10px;font-family:sans-serif;">PRUEBA</span>' : '') + '</td>';
+      html += '<td><span style="background:' + (catColors[r[2]]||'#ccc') + ';color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;">' + r[2] + '</span></td>';
+      html += '<td><span style="background:' + (metaCatColors[r[9]]||'#999') + ';color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;">' + (r[9]||'?') + '</span></td>';
+      html += '<td class="r" style="font-weight:700;">' + msgs.toLocaleString() + '</td>';
+      html += '<td class="r">' + (cost > 0 ? '$' + cost.toFixed(2) : '—') + '</td>';
+      // View content button
+      const hasContent = typeof templateContents !== 'undefined' && templateContents[r[1]];
+      if(hasContent) {
+        html += '<td style="text-align:center;"><button onclick="event.stopPropagation();showTplContent(\'' + r[1].replace(/'/g,"\\'") + '\')" style="padding:2px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:10px;background:#f9f8f4;font-family:sans-serif;">Ver</button></td>';
+      } else {
+        html += '<td></td>';
+      }
+      html += '</tr>';
+
+      // Expanded phone rows with pagination
+      if(isExpanded && hasPhones) {
+        const phones = (templatePhones[mes] || {})[r[1]] || [];
+        // Sort by msgs desc (most costly first)
+        phones.sort((a,b) => b[1] - a[1]);
+        const totalPages = Math.ceil(phones.length / PHONE_PAGE_SIZE);
+        const start = phonePage * PHONE_PAGE_SIZE;
+        const end = Math.min(start + PHONE_PAGE_SIZE, phones.length);
+
+        phones.slice(start, end).forEach((ph, idx) => {
+          const phCost = ph[1] * rate;
+          html += '<tr style="background:#f5f4f0;font-size:11px;">';
+          html += '<td style="color:#ccc;font-size:10px;text-align:right;">' + (start+idx+1) + '</td><td></td>';
+          html += '<td style="padding-left:24px;font-family:monospace;color:#666;">' + ph[0] + '</td>';
+          html += '<td></td><td></td>';
+          html += '<td class="r" style="color:#666;">' + ph[1].toLocaleString() + '</td>';
+          html += '<td class="r" style="color:#666;">' + (phCost > 0 ? '$' + phCost.toFixed(2) : '—') + '</td>';
+          html += '<td></td>';
+          html += '</tr>';
+        });
+
+        // Pagination
+        if(totalPages > 1) {
+          html += '<tr style="background:#f5f4f0;"><td colspan="8" style="text-align:center;padding:8px;font-size:12px;font-family:-apple-system,sans-serif;">';
+          html += 'Pagina ' + (phonePage+1) + ' de ' + totalPages + ' (' + phones.length + ' numeros) &nbsp; ';
+          if(phonePage > 0) html += '<button onclick="event.stopPropagation();phonePage=0;renderTemplates();" style="padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;margin:0 2px;">Primera</button>';
+          if(phonePage > 0) html += '<button onclick="event.stopPropagation();phonePage--;renderTemplates();" style="padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;margin:0 2px;">Anterior</button>';
+          if(phonePage < totalPages-1) html += '<button onclick="event.stopPropagation();phonePage++;renderTemplates();" style="padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;margin:0 2px;">Siguiente</button>';
+          if(phonePage < totalPages-1) html += '<button onclick="event.stopPropagation();phonePage='+(totalPages-1)+';renderTemplates();" style="padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;margin:0 2px;">Ultima</button>';
+          html += '</td></tr>';
+        }
+
+        html += '<tr style="background:#ebeae3;font-weight:600;font-size:11px;">';
+        html += '<td></td><td></td><td style="padding-left:24px;">Total: ' + phones.length.toLocaleString() + ' numeros</td><td></td><td></td><td></td>';
+        html += '<td class="r">' + phones.reduce((s,p)=>s+p[1],0).toLocaleString() + '</td>';
+        html += '<td class="r">$' + (phones.reduce((s,p)=>s+p[1],0) * rate).toFixed(2) + '</td>';
+        html += '</tr>';
+      }
+    });
+
+    tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:#999;padding:20px;">Sin resultados</td></tr>';
+    document.getElementById('tplCount').textContent = filtered.length + ' plantillas';
+
+    const mesLabel = mes === 'todos' ? 'Ene-Abr' : mes.toUpperCase();
+    const testTpls = filtered.filter(r => isTestTpl(r[1]));
+    const testMsgsTotal = testTpls.reduce((s,r) => s + (idx===8 ? r[8] : r[idx]), 0);
+    const testCostTotal = testTpls.reduce((s,r) => {
+      const m = idx===8 ? r[8] : r[idx];
+      return s + (mes==='todos' ? r[3]*cpmFull.ene+r[4]*cpmFull.feb+r[5]*cpmFull.mar+r[6]*cpmFull.abr : m*rate);
+    }, 0);
+
+    document.getElementById('tplSummary').innerHTML =
+      '<strong>Resumen ' + mesLabel + ':</strong> ' +
+      filtered.length + ' plantillas &middot; ' +
+      totalMsgs.toLocaleString() + ' mensajes &middot; ' +
+      '<strong>$' + totalCost.toFixed(2) + '</strong> costo estimado' +
+      (mes !== 'todos' && rate > 0 ? ' (a $' + rate.toFixed(4) + '/msg)' : '') +
+      (mes === 'may' ? ' <span style="color:#999;">(sin factura, costo $0)</span>' : '') +
+      (testTpls.length > 0 ? '<br><span style="color:#c62828;">Plantillas test: ' + testTpls.length + ' (' + testMsgsTotal.toLocaleString() + ' msgs, $' + testCostTotal.toFixed(2) + ' desperdiciados)</span>' : '');
+  }
+
+  function toggleTplPhones(tpl, mes) {
+    if(mes === 'todos') return;
+    const key = tpl + '_' + mes;
+    if(expandedTpl === key) {
+      expandedTpl = null;
+    } else {
+      expandedTpl = key;
+      phonePage = 0;
+    }
+    renderTemplates();
+  }
+
+  if(typeof templateData !== 'undefined') renderTemplates();
+  function showTplContent(name) {
+    if(typeof templateContents === 'undefined') return;
+    const tpl = templateContents[name];
+    const modal = document.getElementById('tplModal');
+    const content = document.getElementById('tplModalContent');
+
+    if(!tpl) {
+      content.innerHTML = '<p style="color:#999;">Contenido no disponible para esta plantilla.</p>';
+    } else {
+      let html = '<div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:16px;">' + name + '</div>';
+
+      if(tpl.headerType) {
+        html += '<div style="font-size:11px;color:#999;margin-bottom:4px;">HEADER: ' + tpl.headerType + '</div>';
+        if(tpl.header) html += '<div style="background:#f5f4f0;padding:8px 12px;border-radius:4px;margin-bottom:12px;font-size:13px;">' + tpl.header + '</div>';
+        if(tpl.headerType === 'IMAGE') html += '<div style="background:#e8e8e8;padding:12px;border-radius:4px;margin-bottom:12px;text-align:center;color:#999;font-size:12px;">[Imagen]</div>';
+      }
+
+      if(tpl.body) {
+        html += '<div style="font-size:11px;color:#999;margin-bottom:4px;">BODY:</div>';
+        html += '<div style="background:#dcf8c6;padding:12px 16px;border-radius:8px;margin-bottom:12px;font-size:14px;line-height:1.6;white-space:pre-wrap;">' + tpl.body.replace(/\\n/g, '\n').replace(/\{\{(\d+)\}\}/g, '<span style="background:#fef9e7;padding:1px 4px;border-radius:3px;font-size:12px;">{{$1}}</span>') + '</div>';
+      }
+
+      if(tpl.buttons) {
+        html += '<div style="font-size:11px;color:#999;margin-bottom:4px;">BOTONES:</div>';
+        html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+        tpl.buttons.split(' | ').forEach(function(b) {
+          html += '<span style="background:#fff;border:1px solid #25D366;color:#25D366;padding:6px 14px;border-radius:20px;font-size:13px;">' + b + '</span>';
+        });
+        html += '</div>';
+      }
+
+      content.innerHTML = html;
+    }
+
+    modal.style.display = 'flex';
+  }
+
+  function closeTplModal() {
+    document.getElementById('tplModal').style.display = 'none';
+  }
+
+  document.getElementById('tplModal').addEventListener('click', function(e) {
+    if(e.target === this) closeTplModal();
+  });
+
+  document.getElementById('tplMes').addEventListener('change', function() { expandedTpl = null; renderTemplates(); });
+  document.getElementById('tplCategoria').addEventListener('change', function() { expandedTpl = null; renderTemplates(); });
+  document.getElementById('tplProveedor').addEventListener('change', function() { expandedTpl = null; renderTemplates(); });
+  document.getElementById('tplMetaCat').addEventListener('change', function() { expandedTpl = null; renderTemplates(); });
+  document.getElementById('tplSearch').addEventListener('input', function() { expandedTpl = null; renderTemplates(); });
+
+  // ── Calls detail table ──
+  const CALL_PAGE = 100;
+  let callPage = 0;
+  const callCostPerCall = 0.0033; // from invoice: $208/63798 and $282/84252
+
+  function renderCalls() {
+    if(typeof callsData === 'undefined') {
+      document.getElementById('callBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c62828;padding:20px;">Error: calls_data.js no cargado.</td></tr>';
+      return;
+    }
+    const month = document.getElementById('callMonth').value;
+    const search = document.getElementById('callSearch').value.trim();
+    const monthData = callsData[month];
+
+    if(!monthData || !Array.isArray(monthData) || monthData.length === 0) {
+      document.getElementById('callBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:20px;">Datos no disponibles para este mes. Extraccion pendiente.</td></tr>';
+      document.getElementById('callCount').textContent = '';
+      document.getElementById('callSummary').innerHTML = '';
+      document.getElementById('callPagination').innerHTML = '';
+      return;
+    }
+
+    let filtered = search ? monthData.filter(r => r[0].includes(search)) : monthData;
+
+    const totalPages = Math.ceil(filtered.length / CALL_PAGE);
+    const start = callPage * CALL_PAGE;
+    const end = Math.min(start + CALL_PAGE, filtered.length);
+
+    let html = '';
+    for(let i = start; i < end; i++) {
+      const r = filtered[i];
+      const cost = r[1] * callCostPerCall;
+      const isTest = /^9{5,}/.test(r[0].replace(/^51/,'')) || r[0] === '9999999';
+      const bg = isTest ? 'background:#fde8e8;' : r[1] >= 20 ? 'background:#fef9e7;' : '';
+      html += '<tr style="' + bg + '">';
+      html += '<td style="color:#999;font-size:11px;">' + (i+1) + '</td>';
+      html += '<td style="font-family:monospace;font-size:12px;">' + r[0] + (isTest ? ' <span style="color:#c62828;font-size:10px;">PRUEBA</span>' : '') + '</td>';
+      html += '<td class="r" style="font-weight:700;">' + r[1].toLocaleString() + '</td>';
+      html += '<td class="r">$' + cost.toFixed(2) + '</td>';
+      html += '</tr>';
+    }
+    document.getElementById('callBody').innerHTML = html || '<tr><td colspan="4" style="text-align:center;color:#999;">Sin resultados</td></tr>';
+    document.getElementById('callCount').textContent = filtered.length.toLocaleString() + ' numeros';
+
+    // Pagination
+    const pag = document.getElementById('callPagination');
+    if(totalPages <= 1) { pag.innerHTML = ''; } else {
+      let p = 'Pagina ' + (callPage+1) + ' de ' + totalPages + ' ';
+      if(callPage > 0) p += '<button onclick=\"callPage=0;renderCalls();\" style=\"padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;\">Primera</button> ';
+      if(callPage > 0) p += '<button onclick=\"callPage--;renderCalls();\" style=\"padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;\">Anterior</button> ';
+      if(callPage < totalPages-1) p += '<button onclick=\"callPage++;renderCalls();\" style=\"padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;\">Siguiente</button> ';
+      if(callPage < totalPages-1) p += '<button onclick=\"callPage='+(totalPages-1)+';renderCalls();\" style=\"padding:3px 8px;border:1px solid #ddd;border-radius:3px;cursor:pointer;font-size:11px;\">Ultima</button>';
+      pag.innerHTML = p;
+    }
+
+    // Summary
+    const totalCalls = filtered.reduce((s,r) => s + r[1], 0);
+    const totalCost = totalCalls * callCostPerCall;
+    const top10 = filtered.slice(0,10).reduce((s,r) => s + r[1], 0);
+    const heavy = filtered.filter(r => r[1] >= 10);
+    const heavyCalls = heavy.reduce((s,r) => s + r[1], 0);
+    document.getElementById('callSummary').innerHTML =
+      '<strong>Resumen ' + month.toUpperCase() + ':</strong><br>' +
+      filtered.length.toLocaleString() + ' numeros destino &middot; ' +
+      totalCalls.toLocaleString() + ' llamadas &middot; ' +
+      '<strong>$' + totalCost.toFixed(2) + '</strong> costo PSTN estimado<br>' +
+      'Top 10 numeros: ' + top10.toLocaleString() + ' llamadas (' + (totalCalls>0?(top10/totalCalls*100).toFixed(1):'0') + '%) &middot; ' +
+      'Numeros con 10+ llamadas: ' + heavy.length.toLocaleString() + ' (' + (filtered.length>0?(heavy.length/filtered.length*100).toFixed(1):'0') + '%) generan ' +
+      heavyCalls.toLocaleString() + ' llamadas (' + (totalCalls>0?(heavyCalls/totalCalls*100).toFixed(1):'0') + '%)';
+  }
+
+  if(typeof callsData !== 'undefined') renderCalls();
+  document.getElementById('callMonth').addEventListener('change', function() { callPage=0; renderCalls(); });
+  document.getElementById('callSearch').addEventListener('input', function() { callPage=0; renderCalls(); });
+
+  // ── Dias de atraso table ──
+  const diasCpm = {'2026-01':0.0471, '2026-02':0.0679, '2026-03':0.0678, '2026-04':0.0749};
+  const diasOrder = ['-4','-3','-2','-1','0','1-3','3','4-5','6-10','10','11-15','16-20','16-30','autoreprog','moderada','gestor','gestor_prev','otro'];
+  const diasLabels = {
+    '-4':'Preventivo 4 (pre-vto)','-3':'Preventivo 3 (pre-vto)','-2':'Preventivo 2 (pre-vto)','-1':'Preventivo 1 / Recordatorio',
+    '0':'Dia 0 (vencimiento)','1-3':'Mora 1-3 dias','3':'Mora 3 dias','4-5':'Mora 4-5 dias',
+    '6-10':'Mora 6-10 dias','10':'Mora 10 dias','11-15':'Mora 11-15 dias','16-20':'Mora 16-20 dias','16-30':'Mora 16-30 dias',
+    'autoreprog':'Autoreprogramacion','moderada':'Cobranza moderada (Vox)','gestor':'Gestor cobranza','gestor_prev':'Gestor preventivo','otro':'Otros cobranza'
+  };
+
+  function renderDias() {
+    if(typeof diasAtrasoData === 'undefined') {
+      document.getElementById('diasBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#c62828;padding:20px;">Error: dias_atraso_data.js no cargado.</td></tr>';
+      return;
+    }
+    const mes = document.getElementById('diasMes').value;
+    const rate = diasCpm[mes] || 0;
+    const mesData = diasAtrasoData[mes] || {};
+
+    let totalMsgs = 0, totalPhones = 0, totalCost = 0;
+    const rows = [];
+    diasOrder.forEach(function(rango) {
+      const d = mesData[rango];
+      if(d && d.msgs > 0) {
+        const cost = d.msgs * rate;
+        totalMsgs += d.msgs;
+        totalPhones += d.phones;
+        totalCost += cost;
+        rows.push({rango, label: diasLabels[rango]||rango, msgs:d.msgs, phones:d.phones, cost, msgsPerPhone:(d.msgs/d.phones).toFixed(1)});
+      }
+    });
+
+    const tbody = document.getElementById('diasBody');
+    let html = '';
+    rows.forEach(function(r) {
+      const pct = (r.msgs / totalMsgs * 100).toFixed(1);
+      const isPreventivo = r.rango.startsWith('-');
+      const isMora = !isNaN(parseInt(r.rango)) && parseInt(r.rango) > 0 || r.rango.match(/^\d/);
+      const bg = isPreventivo ? 'background:#ecfdf5;' : r.rango === '0' ? 'background:#fef9e7;' : '';
+      html += '<tr style="' + bg + '">';
+      html += '<td style="font-weight:' + (isPreventivo?'400':'600') + ';color:' + (isPreventivo?'#2e7d32':'#1a1a1a') + ';">' + r.label + '</td>';
+      html += '<td class="r" style="font-weight:700;">' + r.msgs.toLocaleString() + '</td>';
+      html += '<td class="r">' + r.phones.toLocaleString() + '</td>';
+      html += '<td class="r">' + r.msgsPerPhone + '</td>';
+      html += '<td class="r">' + (r.cost > 0 ? '$' + r.cost.toFixed(0) : '—') + '</td>';
+      html += '<td class="r">' + pct + '%</td>';
+      html += '</tr>';
+    });
+
+    // Subtotals
+    var prevMsgs=0, prevCost=0, moraMsgs=0, moraCost=0, otroMsgs=0, otroCost=0;
+    rows.forEach(function(r) {
+      if(r.rango.startsWith('-')) { prevMsgs+=r.msgs; prevCost+=r.cost; }
+      else if(r.rango==='autoreprog'||r.rango==='moderada'||r.rango==='gestor'||r.rango==='gestor_prev'||r.rango==='otro') { otroMsgs+=r.msgs; otroCost+=r.cost; }
+      else { moraMsgs+=r.msgs; moraCost+=r.cost; }
+    });
+
+    html += '<tr style="background:#f9f8f4;font-weight:700;border-top:2px solid #ddd;">';
+    html += '<td>TOTAL</td>';
+    html += '<td class="r">' + totalMsgs.toLocaleString() + '</td>';
+    html += '<td class="r">' + totalPhones.toLocaleString() + '</td>';
+    html += '<td class="r">' + (totalMsgs/totalPhones).toFixed(1) + '</td>';
+    html += '<td class="r">$' + totalCost.toFixed(0) + '</td>';
+    html += '<td class="r">100%</td>';
+    html += '</tr>';
+
+    tbody.innerHTML = html;
+
+    document.getElementById('diasSummary').innerHTML =
+      '<strong>Resumen:</strong> ' + totalMsgs.toLocaleString() + ' mensajes a ' + totalPhones.toLocaleString() + ' numeros &middot; <strong>$' + totalCost.toFixed(0) + '</strong> costo estimado<br>' +
+      'Preventivos (pre-vto): ' + prevMsgs.toLocaleString() + ' msgs ($' + prevCost.toFixed(0) + ') &middot; ' +
+      'Mora (0-30 dpd): ' + moraMsgs.toLocaleString() + ' msgs ($' + moraCost.toFixed(0) + ') &middot; ' +
+      'Gestores/otros: ' + otroMsgs.toLocaleString() + ' msgs ($' + otroCost.toFixed(0) + ')';
+  }
+
+  // ── Ficha por plantilla ──
+  const fichaMonths = ['ene','feb','mar','abr','may'];
+  const fichaMonthLabels = {'ene':'2026-01','feb':'2026-02','mar':'2026-03','abr':'2026-04','may':'2026-05'};
+  const fichaMesIdx = {ene:3,feb:4,mar:5,abr:6,may:7};
+
+  if(typeof templateData !== 'undefined') {
+    // Populate dropdown sorted by total desc
+    const select = document.getElementById('fichaPlantilla');
+    const sorted = [...templateData].sort((a,b) => b[8]-a[8]);
+    sorted.forEach(function(r) {
+      const opt = document.createElement('option');
+      opt.value = r[1];
+      opt.textContent = r[1] + ' (' + r[0] + ', ' + r[8].toLocaleString() + ' msgs)';
+      select.appendChild(opt);
+    });
+  }
+
+  function renderFicha() {
+    const name = document.getElementById('fichaPlantilla').value;
+    if(!name) { document.getElementById('fichaContent').style.display = 'none'; return; }
+    document.getElementById('fichaContent').style.display = 'block';
+
+    const tpl = templateData.find(function(r) { return r[1] === name; });
+    if(!tpl) return;
+
+    const area = tpl[2];
+    const metaCat = tpl[9];
+    const proveedor = tpl[0];
+
+    // Info box
+    document.getElementById('fichaInfo').innerHTML =
+      '<strong style="font-size:15px;">' + name + '</strong><br>' +
+      'Proveedor: <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (provDots[proveedor]||'#999') + ';margin:0 4px;"></span><strong>' + proveedor + '</strong> &middot; ' +
+      'Area: <span style="background:' + (catColors[area]||'#ccc') + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;">' + area + '</span> &middot; ' +
+      'Tipo Meta: <span style="background:' + (metaCatColors[metaCat]||'#999') + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;">' + metaCat + '</span> &middot; ' +
+      'Total: <strong>' + tpl[8].toLocaleString() + '</strong> msgs';
+
+    document.getElementById('fichaAreaHeader').textContent = '% de ' + area;
+    document.getElementById('fichaMetaHeader').textContent = '% de ' + metaCat;
+
+    // Table
+    var html = '';
+    fichaMonths.forEach(function(m) {
+      var idx = fichaMesIdx[m];
+      var msgs = tpl[idx];
+      var t = typeof templateTotals !== 'undefined' ? templateTotals[m] : null;
+      var pctTotal = t && t.grand > 0 ? (msgs/t.grand*100).toFixed(1) : '—';
+      var pctArea = t && t.byArea[area] > 0 ? (msgs/t.byArea[area]*100).toFixed(1) : '—';
+      var pctMeta = t && t.byMeta[metaCat] > 0 ? (msgs/t.byMeta[metaCat]*100).toFixed(1) : '—';
+
+      html += '<tr' + (msgs > 0 ? '' : ' style="color:#ccc;"') + '>';
+      html += '<td>' + fichaMonthLabels[m] + '</td>';
+      html += '<td class="r" style="font-weight:700;">' + (msgs > 0 ? msgs.toLocaleString() : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctTotal + '%' : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctArea + '%' : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctMeta + '%' : '—') + '</td>';
+      html += '</tr>';
+    });
+
+    // Total row
+    html += '<tr style="background:#f9f8f4;font-weight:700;border-top:2px solid #ddd;">';
+    html += '<td>Total</td>';
+    html += '<td class="r">' + tpl[8].toLocaleString() + '</td>';
+    html += '<td class="r" colspan="3"></td>';
+    html += '</tr>';
+
+    document.getElementById('fichaBody').innerHTML = html;
+
+    // Show message content
+    var msgDiv = document.getElementById('fichaMsg');
+    if(typeof templateContents !== 'undefined' && templateContents[name] && templateContents[name].body) {
+      var body = templateContents[name].body.replace(/\\n/g, '\n').replace(/\{\{(\d+)\}\}/g, '<span style="background:#fef9e7;padding:1px 4px;border-radius:3px;font-size:12px;">{{$1}}</span>');
+      msgDiv.innerHTML = '<div style="font-size:11px;color:#666;margin-bottom:6px;">CONTENIDO DEL MENSAJE:</div>' + body;
+      if(templateContents[name].buttons) {
+        msgDiv.innerHTML += '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
+          templateContents[name].buttons.split(' | ').map(function(b) { return '<span style="background:#fff;border:1px solid #25D366;color:#25D366;padding:4px 12px;border-radius:20px;font-size:12px;">' + b + '</span>'; }).join('') + '</div>';
+      }
+      msgDiv.style.display = 'block';
+    } else {
+      msgDiv.style.display = 'none';
+    }
+  }
+
+  function renderFichaResumen() {
+    if(typeof templateData === 'undefined' || typeof templateTotals === 'undefined') return;
+    var areaF = document.getElementById('fichaAreaFilter').value;
+    var metaF = document.getElementById('fichaMetaFilter').value;
+    var provF = document.getElementById('fichaProvFilter').value;
+
+    // Filter templates
+    var filtered = templateData.filter(function(r) {
+      if(areaF !== 'todas' && r[2] !== areaF) return false;
+      if(metaF !== 'todos' && r[9] !== metaF) return false;
+      if(provF !== 'todos' && r[0] !== provF) return false;
+      return true;
+    });
+
+    // Info
+    var filterDesc = [];
+    if(areaF !== 'todas') filterDesc.push('Area: <span style="background:' + (catColors[areaF]||'#ccc') + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;">' + areaF + '</span>');
+    if(metaF !== 'todos') filterDesc.push('Tipo: <span style="background:' + (metaCatColors[metaF]||'#999') + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:10px;">' + metaF + '</span>');
+    if(provF !== 'todos') filterDesc.push('Proveedor: ' + provF);
+    document.getElementById('fichaResumenInfo').innerHTML = '<strong>' + filtered.length + ' plantillas</strong>' + (filterDesc.length ? ' &middot; ' + filterDesc.join(' &middot; ') : ' (todas)');
+
+    // Update column headers
+    document.getElementById('fichaResAreaCol').textContent = areaF !== 'todas' ? '% de ' + areaF : '% del area';
+    document.getElementById('fichaResMetaCol').textContent = metaF !== 'todos' ? '% de ' + metaF : '% del tipo Meta';
+
+    // Build table
+    var html = '';
+    var grandMsgs = 0;
+    fichaMonths.forEach(function(m) {
+      var idx = fichaMesIdx[m];
+      var t = templateTotals[m];
+      var msgs = filtered.reduce(function(s,r) { return s + r[idx]; }, 0);
+      grandMsgs += msgs;
+      var tplCount = filtered.filter(function(r) { return r[idx] > 0; }).length;
+      var pctTotal = t.grand > 0 ? (msgs/t.grand*100).toFixed(1) : '—';
+
+      // % of area: msgs of filtered / total of selected area (or all)
+      var areaTotal = 0;
+      if(areaF !== 'todas') {
+        areaTotal = t.byArea[areaF] || 0;
+      } else {
+        // Show % of the dominant area of filtered templates
+        var areas = {};
+        filtered.forEach(function(r) { areas[r[2]] = (areas[r[2]]||0) + r[idx]; });
+        var topArea = Object.entries(areas).sort(function(a,b){return b[1]-a[1];})[0];
+        areaTotal = topArea ? (t.byArea[topArea[0]]||0) : 0;
+      }
+      var pctArea = areaTotal > 0 ? (msgs/areaTotal*100).toFixed(1) : '—';
+
+      // % of meta type
+      var metaTotal = 0;
+      if(metaF !== 'todos') {
+        metaTotal = t.byMeta[metaF] || 0;
+      } else {
+        var metas = {};
+        filtered.forEach(function(r) { metas[r[9]] = (metas[r[9]]||0) + r[idx]; });
+        var topMeta = Object.entries(metas).sort(function(a,b){return b[1]-a[1];})[0];
+        metaTotal = topMeta ? (t.byMeta[topMeta[0]]||0) : 0;
+      }
+      var pctMeta = metaTotal > 0 ? (msgs/metaTotal*100).toFixed(1) : '—';
+
+      html += '<tr>';
+      html += '<td>' + fichaMonthLabels[m] + '</td>';
+      html += '<td class="r" style="font-weight:700;">' + (msgs > 0 ? msgs.toLocaleString() : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctTotal + '%' : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctArea + '%' : '—') + '</td>';
+      html += '<td class="r">' + (msgs > 0 ? pctMeta + '%' : '—') + '</td>';
+      html += '<td class="r">' + tplCount + '</td>';
+      html += '</tr>';
+    });
+
+    html += '<tr style="background:#f9f8f4;font-weight:700;border-top:2px solid #ddd;">';
+    html += '<td>Total</td>';
+    html += '<td class="r">' + grandMsgs.toLocaleString() + '</td>';
+    html += '<td class="r" colspan="4"></td>';
+    html += '</tr>';
+
+    document.getElementById('fichaResumenBody').innerHTML = html;
+  }
+
+  renderFichaResumen();
+  document.getElementById('fichaAreaFilter').addEventListener('change', renderFichaResumen);
+  document.getElementById('fichaMetaFilter').addEventListener('change', renderFichaResumen);
+  document.getElementById('fichaProvFilter').addEventListener('change', renderFichaResumen);
+  document.getElementById('fichaPlantilla').addEventListener('change', renderFicha);
+
+  if(typeof diasAtrasoData !== 'undefined') renderDias();
+  document.getElementById('diasMes').addEventListener('change', renderDias);
+</script>
+
+</body>
+
+</body>
+</html>
